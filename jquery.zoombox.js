@@ -10,9 +10,22 @@
     
     var ver = '1.0',
     
-    _binds = function($trigger){
+    _binds = function(params, $trigger){
         $trigger.bind('click.zoomboxEvents', function(e){
-            $('#'+params.zoomboxContainerId).css({'top': '', 'left': ''});
+            e.preventDefault();
+            
+            var o = _calcGrowPoint(),
+                $zc = $('#'+params.zoomboxContainerId);
+                
+            $zc.css({'top': o.x+'px', 'left': o.x+'px'});
+            if($zc.hasClass('inactive')){
+                $zc.animate({
+                    height: '200px',
+                    width: '300px'
+                }, 'fast');
+            } else {
+                
+            }
         });
     },
     
@@ -24,11 +37,18 @@
         $(window).data('test', 'im the test data string');
     },
     
-    _calcGrowPoint = function(){
+    _calcGrowPoint = function(e){
+        o = {};
         
+        if(params.growFromMouse) { o.x = e.pageX; o.y = e.pageY; }
+        else { 
+            var offset = $(e.target).offset();
+            o.x = offset.left; 
+            o.y = offset.top;
+        }
+        return o;
     },
     
-    //e.pageX +', '+ e.pageY
     _quickGrow = function(){
         
     },
@@ -38,13 +58,13 @@
             return this.each(function(){
                 var $trigger = $(this),
                     params = $.extend($.fn.zoombox.defaults, options),
-                    $div = $('<div id="'+params.zoomboxContainerId+'"/>').css({'background-color': 'green', 'display': 'none', 'width': '1px', 'height': '1px', 'position': 'absolute'});
+                    $div = $('<div id="'+params.zoomboxContainerId+'" class="inactive"/>').css({'background-color': 'green', 'display': 'none', 'width': '1px', 'height': '1px', 'position': 'absolute'});
                     
                 
                 
                 $('body').append($div);
                 
-                _binds($trigger);
+                _binds(params, $trigger);
                 
             });
         },
