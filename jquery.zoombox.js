@@ -15,14 +15,16 @@
             e.preventDefault();
             
             var o = _calcGrowPoint(e, params),
-                $zc = $('#'+params.zoomboxContainerId),
+                $zc = $('#'+params.containerId),
                 startmap = {'left': o.x+'px', 'top': o.y+'px'},
-                animap = {'left': (o.x - parseInt(params.targetWidth / 2, 10) )+'px',width: params.targetWidth,'top': (o.y - parseInt(params.targetHeight / 2, 10))+'px',height: params.targetHeight};
+                animapLeft = (params.targetPosX !== undefined) ? params.targetPosX : o.x - parseInt(params.targetWidth / 2, 10),
+                animapTop = (params.targetPosY !== undefined) ? params.targetPosY : o.y - parseInt(params.targetHeight / 2, 10),
+                animap = {'left': animapLeft+'px',width: params.targetWidth,'top': animapTop+'px',height: params.targetHeight};
             
             $zc.css(startmap);
             
             if($zc.hasClass('inactive')){
-                $zc.css('opacity', '1').animate(animap, 'slow', function(){
+                $zc.css('opacity', '1').animate(animap, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
                     $zc.addClass('active');
                 });
             } else {
@@ -60,11 +62,10 @@
             return this.each(function(){
                 var $trigger = $(this),
                     params = $.extend($.fn.zoombox.defaults, options),
-                    $div = $('<div id="'+params.zoomboxContainerId+'" class="inactive"/>').css({'background-color': 'green',  'opacity': '0', 'width': '1px', 'height': '1px', 'position': 'absolute'});
+                    containerParent = (params.containerParent !== undefined) ? params.containerParent : 'body',
+                    $div = $('<div id="'+params.containerId+'" class="inactive"/>').css({'background-color': 'green',  'opacity': '0', 'width': '1px', 'height': '1px', 'position': 'absolute'});
                     
-                
-                
-                $('body').append($div);
+                $(containerParent).append($div);
                 
                 _binds(params, $trigger);
                 
@@ -104,6 +105,8 @@
     $.fn.zoombox.ver = function() { return ver; };
     
     $.fn.zoombox.defaults = {
+        containerId:                "zoombox-container",
+        containerParent:            undefined,
         closeWhenEsc:               true,
         closeWhenSelfIsNotClicked:  true,
         growFromMouse:              true,
@@ -111,7 +114,10 @@
         showCloseBtn:               true,
         targetHeight:               '200',
         targetWidth:                '400',
-        zoomboxContainerId:         "zoombox-container"
+        targetPosX:                 undefined,
+        targetPosY:                 undefined,
+        zoomboxEasing:              'swing',
+        zoomboxAnimationSpeed:      'fast'
     };
     
 })(jQuery);
