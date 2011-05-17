@@ -14,17 +14,19 @@
         $trigger.bind('click.zoomboxEvents', function(e){
             e.preventDefault();
             
-            var o = _calcGrowPoint(),
-                $zc = $('#'+params.zoomboxContainerId);
-                
-            $zc.css({'top': o.x+'px', 'left': o.x+'px'});
+            var o = _calcGrowPoint(e, params),
+                $zc = $('#'+params.zoomboxContainerId),
+                startmap = {'left': o.x+'px', 'top': o.y+'px'},
+                animap = {'left': (o.x - parseInt(params.targetWidth / 2, 10) )+'px',width: params.targetWidth,'top': (o.y - parseInt(params.targetHeight / 2, 10))+'px',height: params.targetHeight};
+            
+            $zc.css(startmap);
+            
             if($zc.hasClass('inactive')){
-                $zc.animate({
-                    height: '200px',
-                    width: '300px'
-                }, 'fast');
+                $zc.css('opacity', '1').animate(animap, 'slow', function(){
+                    $zc.addClass('active');
+                });
             } else {
-                
+
             }
         });
     },
@@ -37,8 +39,8 @@
         $(window).data('test', 'im the test data string');
     },
     
-    _calcGrowPoint = function(e){
-        o = {};
+    _calcGrowPoint = function(e, params){
+        var o = {};
         
         if(params.growFromMouse) { o.x = e.pageX; o.y = e.pageY; }
         else { 
@@ -58,7 +60,7 @@
             return this.each(function(){
                 var $trigger = $(this),
                     params = $.extend($.fn.zoombox.defaults, options),
-                    $div = $('<div id="'+params.zoomboxContainerId+'" class="inactive"/>').css({'background-color': 'green', 'display': 'none', 'width': '1px', 'height': '1px', 'position': 'absolute'});
+                    $div = $('<div id="'+params.zoomboxContainerId+'" class="inactive"/>').css({'background-color': 'green',  'opacity': '0', 'width': '1px', 'height': '1px', 'position': 'absolute'});
                     
                 
                 
@@ -104,9 +106,11 @@
     $.fn.zoombox.defaults = {
         closeWhenEsc:               true,
         closeWhenSelfIsNotClicked:  true,
-        growFromMouse:              false,
+        growFromMouse:              true,
         growFromPoint:              'the click selector or somesuch',
         showCloseBtn:               true,
+        targetHeight:               '200',
+        targetWidth:                '400',
         zoomboxContainerId:         "zoombox-container"
     };
     
