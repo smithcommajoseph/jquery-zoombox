@@ -19,40 +19,19 @@
                 startmap = {'left': o.x+'px', 'top': o.y+'px'},
                 animapLeft = (params.targetPosX !== undefined) ? params.targetPosX : o.x - parseInt(params.targetWidth / 2, 10),
                 animapTop = (params.targetPosY !== undefined) ? params.targetPosY : o.y - parseInt(params.targetHeight / 2, 10),
-                animapGrow = {'left': animapLeft+'px', width: params.targetWidth, 'top': animapTop+'px', height: params.targetHeight},
-                animapShrink = {'left': animapLeft+'px', 'top': animapTop+'px', 'width': '1px', 'height': '1px'};
-            
-            console.log('o');
-            console.log(o);
-            console.log('params.targetWidth');
-            console.log(params.targetWidth);
-            console.log('params.targetHeight');
-            console.log(params.targetHeight);
-            console.log('startmap');
-            console.log(startmap);
-            console.log('animapLeft');
-            console.log(animapLeft);
-            console.log('animapTop');
-            console.log(animapTop);
-            console.log('animapShrink');
-            console.log(animapShrink); 
-
-            
-            $zc.css(startmap);
+                animapGrow = {left: animapLeft+'px', width: params.targetWidth, top: animapTop+'px', height: params.targetHeight},
+                animapShrink = {left: o.x+'px', width: '1px', top: o.y+'px', height: '1px', opacity: '0'};
             
             if($zc.hasClass('inactive')){
+                $zc.css(startmap);
+                
                 $zc.css('opacity', '1').animate(animapGrow, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
                     $zc.removeClass('inactive').addClass('active');
                 });
-                console.log('inside zc.hasclass active is TRUE');
-                console.log(animapGrow);
             } else {
                 $zc.animate(animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
                     $zc.removeClass('active').addClass('inactive');
                 });
-                console.log('inside zc.hasclass active is FALSE');
-                console.log(animapShrink);
-                
             }
         });
     },
