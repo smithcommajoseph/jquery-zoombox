@@ -10,86 +10,95 @@
     
     var ver = '1.0',
     
+    $trigger,
+    $zbContainer,
+    $zbClose,
+    
     _binds = function(params, $trigger){
             
         $trigger.bind('click.zoomboxEvents', function(e){
             e.preventDefault();
             
-            var o = _calcGrowPoint(e, params),
-                $zc = $('#'+params.containerId),
-                startmap = {'left': o.x+'px', 'top': o.y+'px'},
-                animapLeft = (params.targetPosX !== undefined) ? params.targetPosX : o.x - parseInt(params.targetWidth / 2, 10),
-                animapTop = (params.targetPosY !== undefined) ? params.targetPosY : o.y - parseInt(params.targetHeight / 2, 10),
-                animapGrow = {left: animapLeft+'px', width: params.targetWidth, top: animapTop+'px', height: params.targetHeight},
-                animapShrink = {left: o.x+'px', width: '1px', top: o.y+'px', height: '1px'};
-                
-            if($zc.hasClass('inactive')){
-                $zc.css(startmap);
-                
-                $zc.css('opacity', '1').animate(animapGrow, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
-                    $zc.removeClass('inactive').addClass('active');
-                    $('#'+params.containerCloseId).fadeIn();
-                    ($(e.target).attr('href') !== '' || typeof $(e.target).attr('href') !== undefined )
-                    
-                    if(params.openCallback !== null) { params.openCallback(); }
-                });
+            if($zbContainer.hasClass('inactive')){
+                _zoomOpen(e);
             } else {
-                $('#'+params.containerCloseId).fadeOut('fast', function(){
-                    $zc.animate(animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
-                        $zc.removeClass('active').addClass('inactive').css('opacity', '0');
-
-                        if(params.closeCallback !== null) { params.closeCallback(); }
-                    });
-                });
+                _zoomClose(e);
             }
         });
         
-        $('#'+params.containerCloseId).bind('click.zoomboxEvents', function(e){
+        $zbClose.bind('click.zoomboxEvents', function(e){
             e.preventDefault();
+            var zoomcalcs = _returnZoomcalcs(e, params);
             
-            var o = _calcGrowPoint(e, params),
-                $zc = $('#'+params.containerId),
-                animapShrink = {left: o.x+'px', width: '1px', top: o.y+'px', height: '1px'};
-            
-            $('#'+params.containerCloseId).fadeOut('fast', function(){
-                $zc.animate(animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
-                    $zc.removeClass('active').addClass('inactive').css('opacity', '0');
-
-                    if(params.closeCallback !== null) { params.closeCallback(); }
-                });
-            });
+            _zoomClose(e);
         });
     },
     
     _unBinds = function(){
+        $trigger.unbind('.zoomboxEvents');
+        $zbClose.unbind('.zoomboxEvents');
+    },
+    
+    _zoomOpen = function(e){
+        var params = $zbContainer.data('zoomboxOptions'),
+            zoomcalcs = _returnZoomcalcs(e, params);
+            
         
+        $zbContainer.css(zoomcalcs.startmap);
+        
+        $zbContainer.css('opacity', '1').animate(zoomcalcs.animapGrow, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
+            $zbContainer.removeClass('inactive').addClass('active');
+            $zbClose.fadeIn();
+            
+            if(params.openCallback !== null) { params.openCallback(); }
+        });
     },
     
-    _setData = function(){
-        $(window).data('test', 'im the test data string');
+    _zoomClose = function(e){
+        var params = $zbContainer.data('zoomboxOptions'),
+            zoomcalcs = _returnZoomcalcs(e, params);
+                    
+        $zbClose.fadeOut('fast', function(){
+            $zbContainer.animate(zoomcalcs.animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
+                $zbContainer.removeClass('active').addClass('inactive').css('opacity', '0');
+
+                if(params.closeCallback !== null) { params.closeCallback(); }
+            });
+        });
     },
     
-    _calcGrowPoint = function(e, params){
-        var o = {};
+    _returnZoomcalcs = function(e, params){
+        var origin = {},
+            zoomcalcs = {},
+            animapLeft,
+            animapTop;
         
         if($(this).data('zoomcalcs') === undefined) {
                         
-            if(params.growFromMouse) { o.x = e.pageX; o.y = e.pageY; }
+            if(params.growFromMouse) { origin.x = e.pageX; origin.y = e.pageY; }
             // some stubbed stuff here for optional growth from a set point, would need to set context here as well for classes
             // may not actually get implemented
-            // else if (params.growFromPoint !== undefined ){ o.x = params.growFromPoint; o.y = params.growFromPoint } 
+            // else if (params.growFromPoint !== undefined ){ origin.x = params.growFromPoint; origin.y = params.growFromPoint } 
             else { 
                 var offset = $(e.currentTarget).position();
-                o.x = offset.left; 
-                o.y = offset.top;
+                origin.x = offset.left; 
+                origin.y = offset.top;
             }
             
-            $(this).data('zoomcalcs', o);
+            animapLeft = (params.targetPosX !== undefined) ? params.targetPosX : origin.x - parseInt(params.targetWidth / 2, 10);
+            animapTop = (params.targetPosY !== undefined) ? params.targetPosY : origin.y - parseInt(params.targetHeight / 2, 10);
+            
+            zoomcalcs.startmap = {'left': origin.x+'px', 'top': origin.y+'px'};
+            zoomcalcs.animapGrow = {left: animapLeft+'px', width: params.targetWidth, top: animapTop+'px', height: params.targetHeight};
+            zoomcalcs.animapShrink = {left: origin.x+'px', width: '1px', top: origin.y+'px', height: '1px'};
+            
+            $(this).data('zoomcalcs', zoomcalcs);
+            
         } else {
-            o = $(this).data('zoomcalcs');
+            zoomcalcs = $(this).data('zoomcalcs');
         }
         
-        return o;
+        return zoomcalcs;
     },
     
     methods = {
@@ -102,34 +111,40 @@
                                             .css(params.containerCSSMap),
                     $containerCloser = $('<a id="'+params.containerCloseId+'"/>').css('display', 'none');
                 
-                $container.append($containerCloser);
+                $container.append($containerCloser).data('zoomboxOptions', params);
                 $(params.containerParent).append($container);
+                
+                $zbContainer = $('#'+params.containerId);
+                $zbClose = $('#'+params.containerCloseId);
                 
                 _binds(params, $trigger);
                 
             });
         },
-        open: function(){
+        open: function($selector){
             return this.each(function(){
-                console.log('inside open return');
+                var $trigger = $(this),
+                params = params || $zbContainer.data('zoomboxOptions');
                 
+                $selector.click();
             });
         },
         
         close: function(){
             return this.each(function(){
                 var $trigger = $(this),
-                params = $.extend($.fn.zoombox.defaults, options),
-                $zc = $('#'+params.containerId);
-                
+                params = params || $zbContainer.data('zoomboxOptions'),
+                e;
+                                
+                _zoomClose(e);
             });
         },
         
         destroy: function(){
             return this.each(function(){
-                console.log('inside destroy return');
-                
-                _unBinds($trigger);
+                _unBinds();
+                $zbContainer.remove();
+                $zbClose.remove();
             });
         }
     };
@@ -149,7 +164,7 @@
     $.fn.zoombox.defaults = {
         containerId:                "zoombox-container",
         containerCloseId:           "zoombox-close",
-        containerCSSMap:            { 'opacity': '0', 'width': '1px', 'height': '1px', 'position': 'absolute'},
+        containerCSSMap:            {'opacity': '0', 'width': '1px', 'height': '1px', 'position': 'absolute'},
         containerParent:            'body',
         closeWhenEsc:               true,
         closeWhenSelfIsNotClicked:  true,
