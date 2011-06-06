@@ -43,7 +43,6 @@
         var params = $zbContainer.data('zoomboxOptions'),
             zoomcalcs = _returnZoomcalcs(e, params);
             
-        
         $zbContainer.css(zoomcalcs.startmap);
         
         $zbContainer.css('opacity', '1').animate(zoomcalcs.animapGrow, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
@@ -74,11 +73,15 @@
             animapTop;
         
         if($(this).data('zoomcalcs') === undefined) {
-                        
-            if(params.growFromMouse) { origin.x = e.pageX; origin.y = e.pageY; }
-            // some stubbed stuff here for optional growth from a set point, would need to set context here as well for classes
-            // may not actually get implemented
-            // else if (params.growFromPoint !== undefined ){ origin.x = params.growFromPoint; origin.y = params.growFromPoint } 
+            
+            if(params.growFromMouse == true) { origin.x = e.pageX; origin.y = e.pageY; }
+            else if (params.growFromTagAttr == true && params.growTagAttr !== undefined){
+                attrTxt = $(e.currentTarget).attr(params.growTagAttr);
+                attrArr = attrTxt.split(', ');
+                
+                origin.x = attrArr[0]; 
+                origin.y = attrArr[1];
+            } 
             else { 
                 var offset = $(e.currentTarget).position();
                 origin.x = offset.left; 
@@ -88,7 +91,7 @@
             animapLeft = (params.targetPosX !== undefined) ? params.targetPosX : origin.x - parseInt(params.targetWidth / 2, 10);
             animapTop = (params.targetPosY !== undefined) ? params.targetPosY : origin.y - parseInt(params.targetHeight / 2, 10);
             
-            zoomcalcs.startmap = {'left': origin.x+'px', 'top': origin.y+'px'};
+            zoomcalcs.startmap = {left: origin.x+'px', top: origin.y+'px'};
             zoomcalcs.animapGrow = {left: animapLeft+'px', width: params.targetWidth, top: animapTop+'px', height: params.targetHeight};
             zoomcalcs.animapShrink = {left: origin.x+'px', width: '1px', top: origin.y+'px', height: '1px'};
             
@@ -164,13 +167,14 @@
     $.fn.zoombox.defaults = {
         containerId:                "zoombox-container",
         containerCloseId:           "zoombox-close",
-        containerCSSMap:            {'opacity': '0', 'width': '1px', 'height': '1px', 'position': 'absolute'},
+        containerCSSMap:            {opacity: '0', width: '1px', height: '1px', position: 'absolute'},
         containerParent:            'body',
         closeWhenEsc:               true,
         closeWhenSelfIsNotClicked:  true,
         closeCallback:              null, 
-        growFromMouse:              true,
-        growFromPoint:              undefined,
+        growFromMouse:              false,
+        growFromTagAttr:            false,
+        growTagAttr:                undefined,
         openCallback:               null,
         showCloseBtn:               true,
         targetHeight:               '200',
@@ -182,5 +186,3 @@
     };
     
 })(jQuery);
-
-//('.map-feature-link').zoombox();
