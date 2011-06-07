@@ -22,26 +22,50 @@
             if($zbContainer.hasClass('inactive')){
                 _zoomOpen(e);
             } else {
-                _zoomClose(e);
+                _zoomClose();
             }
         });
         
         $zbClose.bind('click.zoomboxEvents', function(e){
             e.preventDefault();
-            var zoomcalcs = _returnZoomcalcs(e, params);
+            var zoomcalcs = _returnZoomcalcs(params);
             
-            _zoomClose(e);
+            _zoomClose();
         });
+        
+        if(params.closeWhenEsc == true){
+            $(window).bind('keyup.zoomboxEvent', function(e){
+                if(e.which == 27){
+                    _zoomClose();
+                }
+            });
+        }
+        
+        if(params.closeWhenSelfIsNotClicked == true){
+            $(params.containerParent).bind('click.zoomboxEvents', function(e){
+                var inZoombox = false,
+                    parents = $(e.target).parents();
+                
+                for(var prop in parents){
+                    if(parents[prop] === $zbContainer[0]) { inZoombox = true; }
+                }
+                
+               if($zbContainer.hasClass('active') && inZoombox == false){
+                   _zoomClose();
+               } 
+            });
+        }
     },
     
     _unBinds = function(){
         $trigger.unbind('.zoomboxEvents');
         $zbClose.unbind('.zoomboxEvents');
+        $(window).unbind('.zoomboxEvents');
     },
     
     _zoomOpen = function(e){
         var params = $zbContainer.data('zoomboxOptions'),
-            zoomcalcs = _returnZoomcalcs(e, params);
+            zoomcalcs = _returnZoomcalcs(params, e);
             
         $zbContainer.css(zoomcalcs.startmap);
         
@@ -53,9 +77,9 @@
         });
     },
     
-    _zoomClose = function(e){
+    _zoomClose = function(){
         var params = $zbContainer.data('zoomboxOptions'),
-            zoomcalcs = _returnZoomcalcs(e, params);
+            zoomcalcs = _returnZoomcalcs(params);
                     
         $zbClose.fadeOut('fast', function(){
             $zbContainer.animate(zoomcalcs.animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
@@ -66,11 +90,12 @@
         });
     },
     
-    _returnZoomcalcs = function(e, params){
+    _returnZoomcalcs = function(params){
         var origin = {},
             zoomcalcs = {},
             animapLeft,
-            animapTop;
+            animapTop,
+            e = (arguments[1] !== undefined) ? arguments[1] : undefined;
         
         if($(this).data('zoomcalcs') === undefined) {
             
@@ -82,7 +107,7 @@
                 origin.x = attrArr[0]; 
                 origin.y = attrArr[1];
             } 
-            else { 
+            else if (e !== undefined){ 
                 var offset = $(e.currentTarget).position();
                 origin.x = offset.left; 
                 origin.y = offset.top;
@@ -136,10 +161,9 @@
         close: function(){
             return this.each(function(){
                 var $trigger = $(this),
-                params = params || $zbContainer.data('zoomboxOptions'),
-                e;
+                params = params || $zbContainer.data('zoomboxOptions');
                                 
-                _zoomClose(e);
+                _zoomClose();
             });
         },
         
