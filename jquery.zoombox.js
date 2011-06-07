@@ -10,65 +10,98 @@
     
     var ver = '1.0',
     
+    $trigger,
+    $zbContainer,
+    $zbClose,
+    
     _binds = function(params, $trigger){
+            
         $trigger.bind('click.zoomboxEvents', function(e){
             e.preventDefault();
-
-            var o = _calcGrowPoint(e, params),
-                $zc = $('#'+params.containerId),
-                startmap = {'left': o.x+'px', 'top': o.y+'px'},
-                animapLeft = (params.targetPosX !== undefined) ? params.targetPosX : o.x - parseInt(params.targetWidth / 2, 10),
-                animapTop = (params.targetPosY !== undefined) ? params.targetPosY : o.y - parseInt(params.targetHeight / 2, 10),
-                animapGrow = {left: animapLeft+'px', width: params.targetWidth, top: animapTop+'px', height: params.targetHeight},
-                animapShrink = {left: o.x+'px', width: '1px', top: o.y+'px', height: '1px', opacity: '0'};
             
-            if($zc.hasClass('inactive')){
-                $zc.css(startmap);
-                
-                $zc.css('opacity', '1').animate(animapGrow, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
-                    $zc.removeClass('inactive').addClass('active');
-                });
+            if($zbContainer.hasClass('inactive')){
+                _zoomOpen(e);
             } else {
-                $zc.animate(animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
-                    $zc.removeClass('active').addClass('inactive');
-                });
+                _zoomClose(e);
             }
+        });
+        
+        $zbClose.bind('click.zoomboxEvents', function(e){
+            e.preventDefault();
+            var zoomcalcs = _returnZoomcalcs(e, params);
+            
+            _zoomClose(e);
         });
     },
     
     _unBinds = function(){
+        $trigger.unbind('.zoomboxEvents');
+        $zbClose.unbind('.zoomboxEvents');
+    },
+    
+    _zoomOpen = function(e){
+        var params = $zbContainer.data('zoomboxOptions'),
+            zoomcalcs = _returnZoomcalcs(e, params);
+            
+        $zbContainer.css(zoomcalcs.startmap);
         
+        $zbContainer.css('opacity', '1').animate(zoomcalcs.animapGrow, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
+            $zbContainer.removeClass('inactive').addClass('active');
+            $zbClose.fadeIn();
+            
+            if(params.openCallback !== null) { params.openCallback(); }
+        });
     },
     
-    _setData = function(){
-        $(window).data('test', 'im the test data string');
+    _zoomClose = function(e){
+        var params = $zbContainer.data('zoomboxOptions'),
+            zoomcalcs = _returnZoomcalcs(e, params);
+                    
+        $zbClose.fadeOut('fast', function(){
+            $zbContainer.animate(zoomcalcs.animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
+                $zbContainer.removeClass('active').addClass('inactive').css('opacity', '0');
+
+                if(params.closeCallback !== null) { params.closeCallback(); }
+            });
+        });
     },
     
-    _calcGrowPoint = function(e, params){
-        var o = {};
+    _returnZoomcalcs = function(e, params){
+        var origin = {},
+            zoomcalcs = {},
+            animapLeft,
+            animapTop;
         
         if($(this).data('zoomcalcs') === undefined) {
-                        
-            if(params.growFromMouse) { o.x = e.pageX; o.y = e.pageY; }
-            // some stubbed stuff here for optional growth from a set point, would need to set context here as well for classes
-            // may not actually get implemented
-            // else if (params.growFromPoint !== undefined ){ o.x = params.growFromPoint; o.y = params.growFromPoint } 
+            
+            if(params.growFromMouse == true) { origin.x = e.pageX; origin.y = e.pageY; }
+            else if (params.growFromTagAttr == true && params.growTagAttr !== undefined){
+                attrTxt = $(e.currentTarget).attr(params.growTagAttr);
+                attrArr = attrTxt.split(', ');
+                
+                origin.x = attrArr[0]; 
+                origin.y = attrArr[1];
+            } 
             else { 
                 var offset = $(e.currentTarget).position();
-                o.x = offset.left; 
-                o.y = offset.top;
+                origin.x = offset.left; 
+                origin.y = offset.top;
             }
             
-            $(this).data('zoomcalcs', o);
+            animapLeft = (params.targetPosX !== undefined) ? params.targetPosX : origin.x - parseInt(params.targetWidth / 2, 10);
+            animapTop = (params.targetPosY !== undefined) ? params.targetPosY : origin.y - parseInt(params.targetHeight / 2, 10);
+            
+            zoomcalcs.startmap = {left: origin.x+'px', top: origin.y+'px'};
+            zoomcalcs.animapGrow = {left: animapLeft+'px', width: params.targetWidth, top: animapTop+'px', height: params.targetHeight};
+            zoomcalcs.animapShrink = {left: origin.x+'px', width: '1px', top: origin.y+'px', height: '1px'};
+            
+            $(this).data('zoomcalcs', zoomcalcs);
+            
         } else {
-            o = $(this).data('zoomcalcs');
+            zoomcalcs = $(this).data('zoomcalcs');
         }
         
-        return o;
-    },
-    
-    _quickGrow = function(){
-        
+        return zoomcalcs;
     },
     
     methods = {
@@ -76,35 +109,45 @@
             return this.each(function(){
                 var $trigger = $(this),
                     params = $.extend($.fn.zoombox.defaults, options),
-                    $div = $('<div id="'+params.containerId+'" class="inactive"/>').css({'background-color': 'green',  'opacity': '0', 'width': '1px', 'height': '1px', 'position': 'absolute'});
-                    
-                $(params.containerParent).append($div);
+                    $container = $('<div/>').attr('id', params.containerId)
+                                            .addClass('inactive')
+                                            .css(params.containerCSSMap),
+                    $containerCloser = $('<a id="'+params.containerCloseId+'"/>').css('display', 'none');
+                
+                $container.append($containerCloser).data('zoomboxOptions', params);
+                $(params.containerParent).append($container);
+                
+                $zbContainer = $('#'+params.containerId);
+                $zbClose = $('#'+params.containerCloseId);
                 
                 _binds(params, $trigger);
                 
             });
         },
-        open: function(){
+        open: function($selector){
             return this.each(function(){
-                console.log('inside open return');
+                var $trigger = $(this),
+                params = params || $zbContainer.data('zoomboxOptions');
                 
+                $selector.click();
             });
         },
         
         close: function(){
             return this.each(function(){
                 var $trigger = $(this),
-                params = $.extend($.fn.zoombox.defaults, options),
-                $zc = $('#'+params.containerId);
-                
+                params = params || $zbContainer.data('zoomboxOptions'),
+                e;
+                                
+                _zoomClose(e);
             });
         },
         
         destroy: function(){
             return this.each(function(){
-                console.log('inside destroy return');
-                
-                _unBinds($trigger);
+                _unBinds();
+                $zbContainer.remove();
+                $zbClose.remove();
             });
         }
     };
@@ -123,11 +166,16 @@
     
     $.fn.zoombox.defaults = {
         containerId:                "zoombox-container",
+        containerCloseId:           "zoombox-close",
+        containerCSSMap:            {opacity: '0', width: '1px', height: '1px', position: 'absolute'},
         containerParent:            'body',
         closeWhenEsc:               true,
         closeWhenSelfIsNotClicked:  true,
-        growFromMouse:              true,
-        growFromPoint:              undefined,
+        closeCallback:              null, 
+        growFromMouse:              false,
+        growFromTagAttr:            false,
+        growTagAttr:                undefined,
+        openCallback:               null,
         showCloseBtn:               true,
         targetHeight:               '200',
         targetWidth:                '400',
@@ -138,5 +186,3 @@
     };
     
 })(jQuery);
-
-//('.map-feature-link').zoombox();
