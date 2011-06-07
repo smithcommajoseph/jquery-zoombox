@@ -71,23 +71,29 @@
         
         $zbContainer.css('opacity', '1').animate(zoomcalcs.animapGrow, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
             $zbContainer.removeClass('inactive').addClass('active');
-            $zbClose.fadeIn();
             
+            if(params.containerCloseId !== null) { $zbClose.fadeIn(); }
             if(params.openCallback !== null) { params.openCallback(); }
         });
     },
     
     _zoomClose = function(){
         var params = $zbContainer.data('zoomboxOptions'),
-            zoomcalcs = _returnZoomcalcs(params);
-                    
-        $zbClose.fadeOut('fast', function(){
-            $zbContainer.animate(zoomcalcs.animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
-                $zbContainer.removeClass('active').addClass('inactive').css('opacity', '0');
+            zoomcalcs = _returnZoomcalcs(params),
+            closeAnimate = function(){
+                $zbContainer.animate(zoomcalcs.animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
+                    $zbContainer.removeClass('active').addClass('inactive').css('opacity', '0');
 
-                if(params.closeCallback !== null) { params.closeCallback(); }
-            });
-        });
+                    if(params.closeCallback !== null) { params.closeCallback(); }
+                });
+            };
+                
+        if(params.containerCloseId !== null) {
+            $zbClose.fadeOut('fast', closeAnimate);
+        } else {
+            closeAnimate();
+        }
+
     },
     
     _returnZoomcalcs = function(params){
@@ -136,14 +142,15 @@
                     params = $.extend($.fn.zoombox.defaults, options),
                     $container = $('<div/>').attr('id', params.containerId)
                                             .addClass('inactive')
-                                            .css(params.containerCSSMap),
-                    $containerCloser = $('<a id="'+params.containerCloseId+'"/>').css('display', 'none');
+                                            .css(params.containerCSSMap);
                 
-                $container.append($containerCloser).data('zoomboxOptions', params);
+                $container.data('zoomboxOptions', params);
+                if(params.containerCloseId !== null){ $container.append('<a id="'+params.containerCloseId+'" style="display: none;"/>'); }
+                
                 $(params.containerParent).append($container);
                 
                 $zbContainer = $('#'+params.containerId);
-                $zbClose = $('#'+params.containerCloseId);
+                if(params.containerCloseId !== null) { $zbClose = $('#'+params.containerCloseId); }
                 
                 _binds(params, $trigger);
                 
@@ -171,7 +178,7 @@
             return this.each(function(){
                 _unBinds();
                 $zbContainer.remove();
-                $zbClose.remove();
+                if(params.containerCloseId !== null) { $zbClose.remove(); }
             });
         }
     };
@@ -195,12 +202,11 @@
         containerParent:            'body',
         closeWhenEsc:               true,
         closeWhenSelfIsNotClicked:  true,
-        closeCallback:              null, 
+        closeCallback:              null,
         growFromMouse:              false,
         growFromTagAttr:            false,
         growTagAttr:                undefined,
         openCallback:               null,
-        showCloseBtn:               true,
         targetHeight:               '200',
         targetWidth:                '400',
         targetPosX:                 undefined,

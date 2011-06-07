@@ -45,7 +45,6 @@
       &nbsp;&nbsp;growFromTagAttr:            false,<br/>
       &nbsp;&nbsp;growTagAttr:                undefined,<br/>
       &nbsp;&nbsp;openCallback:               null,<br/>
-      &nbsp;&nbsp;showCloseBtn:               true,<br/>
       &nbsp;&nbsp;targetHeight:               '200',<br/>
       &nbsp;&nbsp;targetWidth:                '400',<br/>
       &nbsp;&nbsp;targetPosX:                 undefined,<br/>
@@ -90,7 +89,72 @@
         Determines whether the Zoombox should close when a DOM item that is not itself OR a child of itself is clicked.
       </p>
       
+      <p>
+        <b>closeCallback:Function<br/>
+        default = null</b><br/><br/>
+        Optional callback fn that will be fired after zoombox-container div close animation.
+      </p>
       
+      <p>
+        <b>growFromMouse:Boolean <br/>
+        default = false</b><br/><br/>
+        If set to true, the zoombox-container div will have its initial (pre-zoomed) position set to mouse position at time of click.
+      </p>
+
+      <p>
+        <b>growFromTagAttr:Boolean <br/>
+        default = false</b><br/><br/>
+        If set to true, zoombox-container div will have its initial (pre-zoomed) position set from proprietary x/y coordinates set by e.currentTarget's attr. Use growTagAttr(below) to define the attr which holds these x/y coodinates.
+      </p>
+
+      <p>
+        <b>growTagAttr:String = "tag_attr"<br/>
+        default = undefined</b><br/><br/>
+        If growFromTagAttr(above) is set to true, set growTagAttr to the attr which holds you x & y values.
+      </p>
+
+      <p>
+        <b>openCallback:Function<br/>
+        default = null</b><br/><br/>
+        Optional callback fn that will be fired after zoombox-container div open animation.
+      </p>
+
+      <p>
+        <b>targetHeight:String = 'the target height zoombox-container div'<br/>
+        default = '200'</b><br/><br/>
+        This is the final height (currently in pixels) that the zoombox-container will animate to
+      </p>
+
+      <p>
+        <b>targetWidth:String = 'the target width zoombox-container div'<br/>
+        default = '400'</b><br/><br/>
+        This is the final width (currently in pixels) that the zoombox-container will animate to
+      </p>
+
+      <p>
+        <b>targetPosX:Number = 'the target X Coodinate'<br/>
+        default = undefined</b><br/><br/>
+        This is the target x coordinate (currently in pixels) that the zoombox-container will animate to relative to containerParent
+      </p>
+
+      <p>
+        <b>targetPosY:Number = 'the target Y Coodinate'<br/>
+        default = undefined</b><br/><br/>
+        This is the target y coordinate (currently in pixels) that the zoombox-container will animate to relative to containerParent
+      </p>
+
+      <p>
+        <b>zoomboxEasing:String = 'Easing Function Name'<br/>
+        default = 'swing'</b><br/><br/>
+        Easing function to be applied to both zoomOpen and zoomClose animations
+      </p>
+
+      <p>
+        <b>zoomboxAnimationSpeed:String or Number = 'num in milliseconds or jQuery shorthand'<br/>
+        default = 'fast'</b><br/><br/>
+        The duration to be applied to both zoomOpen and zoomClose animations
+      </p>
+
   </div>
 </body>
 </html>
