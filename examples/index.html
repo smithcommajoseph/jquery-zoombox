@@ -154,6 +154,28 @@
         default = 'fast'</b><br/><br/>
         The duration to be applied to both zoomOpen and zoomClose animations
       </p>
+	
+	<h2>Methods</h2>
+	
+	<p>
+      <b>$('sel').zoombox(settings:Object);</b><br/><br/>
+      Initializes zoombox on the selected element(s) with the passed settings
+    </p>
+
+	<p>
+      <b>$('sel').zoombox('open', 'targetsel');</b><br/><br/>
+      Opens a zoombox that has been previously initialized with a simulated 'click' from 'targetsel'.
+    </p>
+
+	<p>
+      <b>$('sel').zoombox('close');</b><br/><br/>
+      Closes a zoombox that has been previously initialized.
+    </p>
+
+	<p>
+      <b>$('sel').zoombox('destroy');</b><br/><br/>
+      Removes all zoombox elements for selected item(s) from the DOM and returns non-dynamic items to their original state.
+    </p>
 
   </div>
 </body>
