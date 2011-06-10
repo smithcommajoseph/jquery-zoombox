@@ -1,11 +1,27 @@
 (function($){
     //some vars
-    var 
-    zoomboxSetup = function(){
-        
+    var xYCoords = '230, 230',
+        $anchor = $('<a />').attr({
+                                    href: 'json_test.html',
+                                    id: 'test-anchor',
+                                    rel: xYCoords
+                                }).html('Anchor'),
+        $button = $('<button />').attr({
+                                    id: 'test-button',
+                                    type: 'submit',
+                                    zB: xYCoords
+                                }).html('Button'),
+        $submit = $('<input />').attr({
+                                    id: 'test-submit',
+                                    type: 'submit',
+                                    zB: xYCoords
+                                }).html('Input type=submit'),
+    zoomboxAnchorSetup = function(){
+        $('body').append($anchor);
     },
-    zoomboxTeardown = function(){
-        
+    zoomboxAnchorTeardown = function(){
+        $('#test-anchor').zoombox('destroy');
+        $('#test-anchor').remove();
     };
     
     
@@ -52,9 +68,47 @@
 
        });
        
-       module('Zoombox Functionality', {setup: zoomboxSetup, teardown: zoomboxTeardown});
+       module('Zoombox Functionality (Anchor)', {setup: zoomboxAnchorSetup, teardown: zoomboxAnchorTeardown});
        
-       test();
-        
+       test('Basic Setup (Pre-zoomed)', function(){
+           
+           expect(6);
+           
+           $('#test-anchor').zoombox();
+            
+           equals(typeof $('#zoombox-container'), 'object', 'Zoombox container should exist in the dom');
+           equals($('#'+$.fn.zoombox.defaults.containerId).css('position'), 'absolute', 'Zoombox container position should be "absolute"');
+           equals($('#'+$.fn.zoombox.defaults.containerId).css('width'), '1px', 'Zoombox container width should be "1px"');
+           equals($('#'+$.fn.zoombox.defaults.containerId).css('height'), '1px', 'Zoombox container height should be "1px"');
+           equals($('#'+$.fn.zoombox.defaults.containerId).css('opacity'), '0', 'Zoombox container opacity should be "0"');
+           equals($('#'+$.fn.zoombox.defaults.containerId).hasClass('inactive'), true, 'Zoombox container should have the class "inactive"');
+           
+           // stop();
+           // $('#test-anchor').click();
+           
+           // start();
+       });
+       
+       test('Basic Setup (Open)', function(){
+           
+           expect(6);
+           
+           $('#test-anchor').zoombox();
+           
+           stop();
+           
+           $('#test-anchor').click();
+           
+
+            equals(typeof $('#zoombox-container'), 'object', 'Zoombox container should exist in the dom');
+            equals($('#'+$.fn.zoombox.defaults.containerId).css('position'), 'absolute', 'Zoombox container position should be "absolute"');
+            equals($('#'+$.fn.zoombox.defaults.containerId).css('width'), $.fn.zoombox.defaults.targetWidth+'px', 'Zoombox container width should be "'+$.fn.zoombox.defaults.targetWidth+'px"');
+            equals($('#'+$.fn.zoombox.defaults.containerId).css('height'), $.fn.zoombox.defaults.targetHeight+'px', 'Zoombox container height should be "'+$.fn.zoombox.defaults.targetHeight+'px"');
+            equals($('#'+$.fn.zoombox.defaults.containerId).css('opacity'), '1', 'Zoombox container opacity should be "1"');
+            equals($('#'+$.fn.zoombox.defaults.containerId).hasClass('active'), true, 'Zoombox container should have the class "active"');
+           
+           start();
+       });
+       
     });
 })(jQuery)
