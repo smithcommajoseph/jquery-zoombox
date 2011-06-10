@@ -72,7 +72,7 @@
             $zbContainer.removeClass('inactive').addClass('active');
             
             if(params.containerCloseId !== null) { $zbClose.fadeIn(); }
-            if(params.openCallback !== null) { params.openCallback(); }
+            if(params.openCallback !== null) { params.openCallback(e); }
         });
     },
     
