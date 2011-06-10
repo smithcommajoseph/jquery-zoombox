@@ -10,33 +10,32 @@
     
     var ver = '1.0',
     
-    $trigger,
     $zbContainer,
     $zbClose,
+    openedBy,
     
     _binds = function(params, $trigger){
             
         $trigger.bind('click.zoomboxEvents', function(e){
             e.preventDefault();
-            
+            // console.log($trigger.html());
             if($zbContainer.hasClass('inactive')){
-                _zoomOpen(e);
+                _zoomOpen($trigger, e);
             } else {
-                _zoomClose();
+                _zoomClose('opendBy');
             }
         });
         
         $zbClose.bind('click.zoomboxEvents', function(e){
             e.preventDefault();
-            var zoomcalcs = _returnZoomcalcs(params);
             
-            _zoomClose();
+            _zoomClose('opendBy');
         });
         
         if(params.closeWhenEsc == true){
             $(window).bind('keyup.zoomboxEvent', function(e){
                 if(e.which == 27){
-                    _zoomClose();
+                    _zoomClose('opendBy');
                 }
             });
         }
@@ -51,7 +50,7 @@
                 }
                 
                if($zbContainer.hasClass('active') && inZoombox == false){
-                   _zoomClose();
+                   _zoomClose('opendBy');
                } 
             });
         }
@@ -63,9 +62,9 @@
         $(window).unbind('.zoomboxEvents');
     },
     
-    _zoomOpen = function(e){
+    _zoomOpen = function($trigger, e){
         var params = $zbContainer.data('zoomboxOptions'),
-            zoomcalcs = _returnZoomcalcs(params, e);
+            zoomcalcs = _returnZoomcalcs(params, $trigger, e);
             
         $zbContainer.css(zoomcalcs.startmap);
         
@@ -77,9 +76,9 @@
         });
     },
     
-    _zoomClose = function(){
+    _zoomClose = function($trigger){
         var params = $zbContainer.data('zoomboxOptions'),
-            zoomcalcs = _returnZoomcalcs(params),
+            zoomcalcs = _returnZoomcalcs(params, $trigger),
             closeAnimate = function(){
                 $zbContainer.animate(zoomcalcs.animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
                     $zbContainer.removeClass('active').addClass('inactive').css('opacity', '0');
@@ -101,9 +100,17 @@
             zoomcalcs = {},
             animapLeft,
             animapTop,
-            e = (arguments[1] !== undefined) ? arguments[1] : undefined;
-        
-        if($(this).data('zoomcalcs') === undefined) {
+            $trigger,
+            e = (arguments[2] !== undefined) ? arguments[2] : undefined;
+            
+            if(typeof arguments[1] == 'object') { $trigger = arguments[1]; openedBy = $trigger; }
+            else if(arguments[1] == 'opendBy'){ $trigger = openedBy; }
+            
+        // console.log('trigger = ');
+        // console.log($trigger.html());
+        // console.log('zoomcalcs = ');
+        // console.log(zoomcalcs);
+        if($trigger.data('zoomcalcs') === undefined) {
             
             if(params.growFromMouse == true) { origin.x = e.pageX; origin.y = e.pageY; }
             else if (params.growFromTagAttr == true && params.growTagAttr !== undefined){
@@ -126,10 +133,10 @@
             zoomcalcs.animapGrow = {left: animapLeft+'px', width: params.targetWidth, top: animapTop+'px', height: params.targetHeight};
             zoomcalcs.animapShrink = {left: origin.x+'px', width: '1px', top: origin.y+'px', height: '1px'};
             
-            $(this).data('zoomcalcs', zoomcalcs);
+            $trigger.data('zoomcalcs', zoomcalcs);
             
         } else {
-            zoomcalcs = $(this).data('zoomcalcs');
+            zoomcalcs = $trigger.data('zoomcalcs');
         }
         
         return zoomcalcs;
@@ -143,6 +150,7 @@
                     $container = $('<div/>').attr('id', params.containerId)
                                             .addClass('inactive')
                                             .css(params.containerCSSMap);
+                // console.log($trigger.html());
                 
                 $container.data('zoomboxOptions', params);
                 if(params.containerCloseId !== null){ $container.append('<a id="'+params.containerCloseId+'" style="display: none;"/>'); }
@@ -170,7 +178,7 @@
                 var $trigger = $(this),
                 params = params || $zbContainer.data('zoomboxOptions');
                                 
-                _zoomClose();
+                _zoomClose('opendBy');
             });
         },
         
