@@ -159,7 +159,7 @@
         open: function($selector){
             return this.each(function(){
                 var $trigger = $(this),
-                params = params || $zbContainer.data('zoomboxOptions');
+                    params = params || $zbContainer.data('zoomboxOptions');
                 
                 $selector.click();
             });
@@ -176,6 +176,9 @@
         
         destroy: function(){
             return this.each(function(){
+                var $trigger = $(this),
+                    params = params || $zbContainer.data('zoomboxOptions');
+                
                 _unBinds();
                 $zbContainer.remove();
                 if(params.containerCloseId !== null) { $zbClose.remove(); }
