@@ -26,7 +26,7 @@
 			}
 		});
 		
-		if(index == 0){
+		if(index === 0 && params.containerCloseId !== null){
 			$zbClose.bind('click.zoomboxEvents', function(e){
 				e.preventDefault();
 				
@@ -34,7 +34,7 @@
 			});
 		}
 		
-		if(params.closeWhenEsc == true && index == 0){
+		if(params.closeWhenEsc === true && index === 0){
 			$(window).bind('keyup.zoomboxEvent', function(e){
 				if(e.which == 27){
 					_zoomClose('opendBy');
@@ -42,7 +42,7 @@
 			});
 		}
 		
-		if(params.closeWhenSelfIsNotClicked == true && index == 0){
+		if(params.closeWhenSelfIsNotClicked === true && index === 0){
 			$(params.containerParent).bind('click.zoomboxEvents', function(e){
 				var inZoombox = false,
 					parents = $(e.target).parents();
@@ -51,7 +51,7 @@
 					if(parents[prop] === $zbContainer[0]) { inZoombox = true; }
 				}
 				
-				if($zbContainer.hasClass('active') && inZoombox == false){
+				if($zbContainer.hasClass('active') && inZoombox === false){
  					_zoomClose('opendBy');
 				} 
 			});
@@ -68,7 +68,7 @@
 		
 		var params = $zbContainer.data('zoomboxOptions'),
 			zoomcalcs = _returnZoomcalcs(params, $trigger, e);
-		
+			
 		$zbContainer.css(zoomcalcs.startmap);
 		
 		$zbContainer.css('opacity', '1').animate(zoomcalcs.animapGrow, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
@@ -111,10 +111,10 @@
 			
 		if($trigger.data('zoomcalcs') === undefined) {
 			
-			if(params.growFromMouse == true) { origin.x = e.pageX; origin.y = e.pageY; }
-			else if (params.growFromTagAttr == true && params.growTagAttr !== undefined){
-				attrTxt = $(e.currentTarget).attr(params.growTagAttr);
-				attrArr = attrTxt.split(', ');
+			if(params.growFromMouse === true) { origin.x = e.pageX; origin.y = e.pageY; }
+			else if (params.growFromTagAttr === true && params.growTagAttr !== undefined){
+				var attrTxt = $(e.currentTarget).attr(params.growTagAttr);
+				var attrArr = attrTxt.split(', ');
 				
 				origin.x = attrArr[0]; 
 				origin.y = attrArr[1];
@@ -146,48 +146,55 @@
 			return this.each(function(index){
 				var $trigger = $(this),
 					params = $.extend($.fn.zoombox.defaults, options),
-					$container = $('<div/>').attr('id', params.containerId)
-											.addClass('inactive')
-											.css(params.containerCSSMap);
+					$container = $('<div/>').attr('id', params.containerId);
 				
-				$container.data('zoomboxOptions', params);
-				if(params.containerCloseId !== null){ $container.append('<a id="'+params.containerCloseId+'" style="display: none;"/>'); }
-				
+			if(index === 0){
 				$(params.containerParent).append($container);
-				
 				$zbContainer = $('#'+params.containerId);
-				if(params.containerCloseId !== null) { $zbClose = $('#'+params.containerCloseId); }
+				
+				$zbContainer.data('zoomboxOptions', params).addClass('inactive').css(params.containerCSSMap);
+				
+				if(params.containerCloseId !== null) {
+					$zbContainer.append('<a id="'+params.containerCloseId+'" style="display: none;"/>');
+					$zbClose = $('#'+params.containerCloseId);
+				}
+			}
 				
 				_binds(params, $trigger, index);
 				
 			});
 		},
 		open: function($selector){
-			return this.each(function(){
-				var $trigger = $(this),
-					params = params || $zbContainer.data('zoomboxOptions');
-				
-				$selector.click();
-			});
+			$selector.click();
 		},
 		
 		close: function(){
-			return this.each(function(){
+			if($zbContainer.length >= 1){ $zbContainer = (arguments[1]) ? $(arguments[1]) : $('#'+$.fn.zoombox.defaults.containerId); }
+			return this.each(function(index){
 				var $trigger = $(this),
-					params = params || $zbContainer.data('zoomboxOptions');
-				
-				_zoomClose('opendBy');
+					params = {};
+					
+				if(index === 0){
+					params = $zbContainer.data('zoomboxOptions');
+					
+					_zoomClose('opendBy');
+				}
 			});
 		},
 		
 		destroy: function(){
-			return this.each(function(){
+			if($zbContainer.length >= 1){ $zbContainer = (arguments[1]) ? $(arguments[1]) : $('#'+$.fn.zoombox.defaults.containerId); }
+			return this.each(function(index){
 				var $trigger = $(this),
-					params = params || $zbContainer.data('zoomboxOptions');
-				
-				_unBinds($trigger);
-				$zbContainer.remove();
-				if(params.containerCloseId !== null) { $zbClose.remove(); }
+					params = {};
+					
+				if(index === 0){
+					params = $zbContainer.data('zoomboxOptions');
+					
+					_unBinds($trigger);
+					$zbContainer.remove();
+					if(params.containerCloseId !== null) { $zbClose.remove(); }
+				}
 			});
 		}
 	};
