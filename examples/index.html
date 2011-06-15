@@ -45,6 +45,8 @@
       &nbsp;&nbsp;growFromTagAttr:            false,<br/>
       &nbsp;&nbsp;growTagAttr:                undefined,<br/>
       &nbsp;&nbsp;openCallback:               null,<br/>
+      &nbsp;&nbsp;preOpen:                    null,<br/>
+      &nbsp;&nbsp;preClose:                   null,<br/>
       &nbsp;&nbsp;targetHeight:               '200',<br/>
       &nbsp;&nbsp;targetWidth:                '400',<br/>
       &nbsp;&nbsp;targetPosX:                 undefined,<br/>
@@ -119,6 +121,18 @@
         Optional callback fn that will be fired after zoombox-container div open animation.
       </p>
 
+      <p>
+        <b>preOpen:Function<br/>
+        default = null</b><br/><br/>
+        Optional callback fn that will be fired Pre-zoombox Open animation. Note: Currently, this does not fire the zoombox-container animation as a callback.
+      </p>
+      
+      <p>
+        <b>preClose:Function<br/>
+        default = null</b><br/><br/>
+        Optional callback fn that will be fired Pre-zoombox Close animation. Note: Currently, this does not fire the zoombox-container animation as a callback.
+      </p>
+      
       <p>
         <b>targetHeight:String = 'the target height zoombox-container div'<br/>
         default = '200'</b><br/><br/>

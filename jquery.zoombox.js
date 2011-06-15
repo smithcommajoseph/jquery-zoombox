@@ -65,37 +65,45 @@
 	},
 	
 	_zoomOpen = function($trigger, e){
-		
 		var params = $zbContainer.data('zoomboxOptions'),
 			zoomcalcs = _returnZoomcalcs(params, $trigger, e);
 			
 		$zbContainer.css(zoomcalcs.startmap);
 		
-		$zbContainer.css('opacity', '1').animate(zoomcalcs.animapGrow, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
-			$zbContainer.removeClass('inactive').addClass('active');
-			
-			if(params.containerCloseId !== null) { $zbClose.fadeIn(); }
-			if(params.openCallback !== null) { params.openCallback(e); }
-		});
+		if(params.preOpen != null){ params.preOpen(); }
+		_animate();
+		
+		function _animate(){
+		    $zbContainer.css('opacity', '1').animate(zoomcalcs.animapGrow, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
+    			$zbContainer.removeClass('inactive').addClass('active');
+
+    			if(params.containerCloseId !== null) { $zbClose.fadeIn(); }
+    			if(params.openCallback !== null) { params.openCallback(e); }
+    		});
+		}
 	},
 	
 	_zoomClose = function($trigger){
 		var params = $zbContainer.data('zoomboxOptions'),
-			zoomcalcs = _returnZoomcalcs(params, $trigger),
-			closeAnimate = function(){
-				$zbContainer.animate(zoomcalcs.animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
-					$zbContainer.removeClass('active').addClass('inactive').css('opacity', '0');
-					
-					if(params.closeCallback !== null) { params.closeCallback(); }
-				});
-			};
+			zoomcalcs = _returnZoomcalcs(params, $trigger);
 			
 		if(params.containerCloseId !== null) {
-			$zbClose.fadeOut('fast', closeAnimate);
+			$zbClose.fadeOut('fast', function(){
+				if(params.preClose != null){ params.preClose(); }
+				_animate();
+			});
 		} else {
-			closeAnimate();
+ 			if(params.preClose != null){ params.preClose(); }
+			_animate();
 		}
 		
+		function _animate(){
+			$zbContainer.animate(zoomcalcs.animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
+				$zbContainer.removeClass('active').addClass('inactive').css('opacity', '0');
+				
+				if(params.closeCallback !== null) { params.closeCallback(); }
+			});
+		}
 	},
 	
 	_returnZoomcalcs = function(params){
@@ -223,6 +231,8 @@
 		growFromTagAttr:			false,
 		growTagAttr:				undefined,
 		openCallback:				null,
+		preOpen: 					null,
+		preClose: 					null,
 		targetHeight:				'200',
 		targetWidth:				'400',
 		targetPosX: 				undefined,
