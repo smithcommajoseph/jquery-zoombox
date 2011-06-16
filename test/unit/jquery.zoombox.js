@@ -134,6 +134,9 @@
 			stop();
 			
 			$('#test-anchor').zoombox({
+				openCallback: function(){
+					$('#test-anchor').click();
+				},
 				preClose: function(){
 					$('#zoombox-container').append('<div id="test-div" />');
 				},
@@ -156,6 +159,10 @@
 		// 	$('#test-anchor').zoombox({
 		// 		growFromTagAttr: true,
 		// 		growTagAttr: 'rel',
+		// 		openCallback: null,
+		// 		openCallback: function(){
+		// 			$('#test-anchor').click();
+		// 		},
 		// 		closeCallback: function(){
 		// 			equals(parseInt($('#zoombox-container').css('left'), 10), xYCoords[0], '#zoombox-container should = first rel tag val');
 		// 			equals(parseInt($('#zoombox-container').css('top'), 10), xYCoords[1], '#zoombox-container should = second rel tag val');
