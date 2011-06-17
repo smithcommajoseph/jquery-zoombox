@@ -19,7 +19,9 @@ describe('Zoombox', function(){
 		var container = 'zoombox-container-'+sel.replace('#', '');
 
 		$(sel).zoombox({
-			containerId: container
+			containerId: container,
+			growFromTagAttr: false,
+			growTagAttr: undefined,
 		});
 
 		expect(typeof $('#'+container)).toEqual('object');
@@ -36,6 +38,8 @@ describe('Zoombox', function(){
 		
 		$(sel).zoombox({
 			containerId: container,
+			growFromTagAttr: false,
+			growTagAttr: undefined,
 			openCallback: function(){
 				t = 1;
 			}
@@ -62,6 +66,8 @@ describe('Zoombox', function(){
 		
 		$(sel).zoombox({
 			containerId: container,
+			growFromTagAttr: false,
+			growTagAttr: undefined,
 			openCallback: function(){
 				$(sel).click();
 			},
@@ -91,6 +97,8 @@ describe('Zoombox', function(){
 		
 		$(sel).zoombox({
 			containerId: container,
+			growFromTagAttr: false,
+			growTagAttr: undefined,
 			preOpen: function(){
 				$('#'+container).append('<div id="test-div" />');
 			},
@@ -115,6 +123,8 @@ describe('Zoombox', function(){
 		
 		$(sel).zoombox({
 			containerId: container,
+			growFromTagAttr: false,
+			growTagAttr: undefined,
 			openCallback: function(){
 				$(sel).click();
 			},
