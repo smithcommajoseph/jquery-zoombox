@@ -16,19 +16,26 @@ describe('Zoombox', function(){
 								zB: xYCoords.join(',')
 								}).html('Input type=submit'),
 	zBInit = function(sel){
-		$(sel).zoombox();
+		var container = 'zoombox-container-'+sel.replace('#', '');
 
-		expect(typeof $('#zoombox-container')).toEqual('object');
-		expect($('#'+$.fn.zoombox.defaults.containerId).css('position')).toEqual('absolute');
-		expect($('#'+$.fn.zoombox.defaults.containerId).css('width')).toEqual('1px');
-		expect($('#'+$.fn.zoombox.defaults.containerId).css('height')).toEqual('1px');
-		expect($('#'+$.fn.zoombox.defaults.containerId).css('opacity')).toEqual('0');
-		expect($('#'+$.fn.zoombox.defaults.containerId).hasClass('inactive')).toBeTruthy();
+		$(sel).zoombox({
+			containerId: container
+		});
+
+		expect(typeof $('#'+container)).toEqual('object');
+		expect($('#'+container).css('position')).toEqual('absolute');
+		expect($('#'+container).css('width')).toEqual('1px');
+		expect($('#'+container).css('height')).toEqual('1px');
+		expect($('#'+container).css('opacity')).toEqual('0');
+		expect($('#'+container).hasClass('inactive')).toBeTruthy();
 
 	},
 	zBOpen = function(sel){
-	    var t = 0;
+		var container = 'zoombox-container-'+sel.replace('#', ''),
+			t = 0;
+		
 		$(sel).zoombox({
+			containerId: container,
 			openCallback: function(){
 				t = 1;
 			}
@@ -41,17 +48,20 @@ describe('Zoombox', function(){
 		});
 
 		runs(function(){
-			expect(typeof $('#zoombox-container')).toEqual('object');
-			expect($('#'+$.fn.zoombox.defaults.containerId).css('position')).toEqual('absolute');
-			expect($('#'+$.fn.zoombox.defaults.containerId).css('width')).toEqual($.fn.zoombox.defaults.targetWidth+'px');
-			expect($('#'+$.fn.zoombox.defaults.containerId).css('height')).toEqual($.fn.zoombox.defaults.targetHeight+'px');
-			expect($('#'+$.fn.zoombox.defaults.containerId).css('opacity')).toEqual('1');
-			expect($('#'+$.fn.zoombox.defaults.containerId).hasClass('active')).toBeTruthy();
+			expect(typeof $('#'+container)).toEqual('object');
+			expect($('#'+container).css('position')).toEqual('absolute');
+			expect($('#'+container).css('width')).toEqual($.fn.zoombox.defaults.targetWidth+'px');
+			expect($('#'+container).css('height')).toEqual($.fn.zoombox.defaults.targetHeight+'px');
+			expect($('#'+container).css('opacity')).toEqual('1');
+			expect($('#'+container).hasClass('active')).toBeTruthy();
 		});
 	},
 	zBClose = function(sel){
-	    var t = 0;
+	    var container = 'zoombox-container-'+sel.replace('#', ''),
+			t = 0;
+		
 		$(sel).zoombox({
+			containerId: container,
 			openCallback: function(){
 				$(sel).click();
 			},
@@ -67,19 +77,22 @@ describe('Zoombox', function(){
 		});
 
 		runs(function(){
-			expect(typeof $('#zoombox-container')).toEqual('object');
-			expect($('#'+$.fn.zoombox.defaults.containerId).css('position')).toEqual('absolute');
-			expect($('#'+$.fn.zoombox.defaults.containerId).css('width')).toEqual('1px');
-			expect($('#'+$.fn.zoombox.defaults.containerId).css('height')).toEqual('1px');
-			expect($('#'+$.fn.zoombox.defaults.containerId).css('opacity')).toEqual('0');
-			expect($('#'+$.fn.zoombox.defaults.containerId).hasClass('inactive')).toBeTruthy();
+			expect(typeof $('#'+container)).toEqual('object');
+			expect($('#'+container).css('position')).toEqual('absolute');
+			expect($('#'+container).css('width')).toEqual('1px');
+			expect($('#'+container).css('height')).toEqual('1px');
+			expect($('#'+container).css('opacity')).toEqual('0');
+			expect($('#'+container).hasClass('inactive')).toBeTruthy();
 		});
 	},
 	zBPreOpen = function(sel){
-	    var t = 0;
+	    var container = 'zoombox-container-'+sel.replace('#', ''),
+			t = 0;
+		
 		$(sel).zoombox({
+			containerId: container,
 			preOpen: function(){
-				$('#zoombox-container').append('<div id="test-div" />');
+				$('#'+container).append('<div id="test-div" />');
 			},
 			openCallback: function(){
 				t = 1;
@@ -93,17 +106,20 @@ describe('Zoombox', function(){
 		});
 
 		runs(function(){
-			expect(typeof $('#zoombox-container #test-div')).toEqual('object');
+			expect(typeof $('#'+container+' #test-div')).toEqual('object');
 		});
 	},
 	zBPreClose = function(sel){
-	    var t = 0;
+	    var container = 'zoombox-container-'+sel.replace('#', ''),
+			t = 0;
+		
 		$(sel).zoombox({
+			containerId: container,
 			openCallback: function(){
 				$(sel).click();
 			},
 			preClose: function(){
-				$('#zoombox-container').append('<div id="test-div" />');
+				$('#'+container).append('<div id="test-div" />');
 			},
 			closeCallback: function(){
 				t = 1;
@@ -117,13 +133,15 @@ describe('Zoombox', function(){
 		});
 
 		runs(function(){
-			expect(typeof $('#zoombox-container #test-div')).toEqual('object');
+			expect(typeof $('#'+container+' #test-div')).toEqual('object');
 		});
 	},
 	zBGrowFrom = function(sel, attr){
-		var t = 0;
+		var container = 'zoombox-container-'+sel.replace('#', ''),
+			t = 0;
 
 		$(sel).zoombox({
+			containerId: container,
 			growFromTagAttr: true,
 			growTagAttr: attr,
 			openCallback: null,
@@ -141,11 +159,11 @@ describe('Zoombox', function(){
 			return t === 1;
 		});
 
-		waits(1000);
+		waits(2000);
 
 		runs(function(){
-			expect(parseInt($('#zoombox-container').css('left'), 10)).toEqual(xYCoords[0]);
-			expect(parseInt($('#zoombox-container').css('top'), 10)).toEqual(xYCoords[1]);
+			expect(parseInt($('#'+container).css('left'), 10)).toEqual(xYCoords[0]);
+			expect(parseInt($('#'+container).css('top'), 10)).toEqual(xYCoords[1]);
 		});
 	};
 	
