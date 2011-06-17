@@ -180,32 +180,34 @@ describe('Zoombox', function(){
 			
 		});
 		
-		// it('should grow from a specified tag\'s attribute value', function(){
-		// 	var t = 0;
-		// 	
-		// 	$('#test-anchor').zoombox({
-		// 		growFromTagAttr: true,
-		// 		growTagAttr: 'rel',
-		// 		openCallback: null,
-		// 		openCallback: function(){
-		// 			$('#test-anchor').click();
-		// 		},
-		// 		closeCallback: function(){
-		// 			t = 1;
-		// 		}
-		// 	});
-		// 	
-		// 	$('#test-anchor').click();
-		// 	
-		// 	waitsFor(function(){
-		// 		return t === 1;
-		// 	});
-		// 	
-		// 	runs(function(){
-		// 		expect(parseInt($('#zoombox-container').css('left'), 10)).toEqual(xYCoords[0]);
-		// 		expect(parseInt($('#zoombox-container').css('top'), 10)).toEqual(xYCoords[1]);
-		// 	});
-		// });
+		it('should grow from a specified tag\'s attribute value', function(){
+			var t = 0;
+			
+			$('#test-anchor').zoombox({
+				growFromTagAttr: true,
+				growTagAttr: 'rel',
+				openCallback: null,
+				openCallback: function(){
+					$('#test-anchor').click();
+				},
+				closeCallback: function(){
+					t = 1;
+				}
+			});
+			
+			$('#test-anchor').click();
+			
+			waitsFor(function(){
+				return t === 1;
+			});
+			
+			waits(1000);
+			
+			runs(function(){
+				expect(parseInt($('#zoombox-container').css('left'), 10)).toEqual(xYCoords[0]);
+				expect(parseInt($('#zoombox-container').css('top'), 10)).toEqual(xYCoords[1]);
+			});
+		});
 		
 		
 	});
