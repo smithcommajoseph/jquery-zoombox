@@ -156,17 +156,17 @@
 					params = $.extend($.fn.zoombox.defaults, options),
 					$container = $('<div/>').attr('id', params.containerId);
 				
-			if(index === 0){
-				$(params.containerParent).append($container);
-				$zbContainer = $('#'+params.containerId);
+				if(index === 0){
+					$(params.containerParent).append($container);
+					$zbContainer = $('#'+params.containerId);
 				
-				$zbContainer.data('zoomboxOptions', params).addClass('inactive').css(params.containerCSSMap);
+					$zbContainer.data('zoomboxOptions', params).addClass('inactive').css(params.containerCSSMap);
 				
-				if(params.containerCloseId !== null) {
-					$zbContainer.append('<a id="'+params.containerCloseId+'" style="display: none;"/>');
-					$zbClose = $('#'+params.containerCloseId);
+					if(params.containerCloseId !== null) {
+						$zbContainer.append('<a id="'+params.containerCloseId+'" style="display: none;"/>');
+						$zbClose = $('#'+params.containerCloseId);
+					}
 				}
-			}
 				
 				_binds(params, $trigger, index);
 				
@@ -197,8 +197,7 @@
 					params = {};
 					
 				if(index === 0){
-					params = $zbContainer.data('zoomboxOptions');
-					
+					$zbContainer.data('zoomboxOptions', params);
 					_unBinds($trigger);
 					$zbContainer.remove();
 					if(params.containerCloseId !== null) { $zbClose.remove(); }
