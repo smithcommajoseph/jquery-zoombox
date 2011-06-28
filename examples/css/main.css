@@ -4,7 +4,9 @@ html, body {
 }
 
 #wrapper {
-	padding: 20px;
+	width:800px;
+	padding: 20px 0;
+	margin: 0 auto;
 }
 
 h1 {
@@ -37,13 +39,17 @@ p {
 .zoombox-container {
   background-color:#666;
 }
-a#zoombox-close{
+.zoombox-container a.zoombox-close{
   display: block;
   width: 20px;
   height: 20px;
   background: transparent url('../imgs/close_btn.png') no-repeat; 
   float: right;
 }
-a#zoombox-close:hover{
+.zoombox-container a.zoombox-close:hover{
 	cursor:pointer;
+}
+.zoombox-container p{
+	color: #fff;
+
 }

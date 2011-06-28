@@ -1,5 +1,3 @@
-README.md
-
 ##jQuery Zoombox
 
 Zoombox is a flexible, half-modal, half-tooltip plugin.
