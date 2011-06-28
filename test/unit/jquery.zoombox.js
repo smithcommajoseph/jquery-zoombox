@@ -8,27 +8,21 @@ describe('Zoombox', function(){
 	$button = $('<button />').attr({
 								id: 'test-button',
 								type: 'submit',
-								zB: xYCoords.join(',')
+								zB: xYCoords.join(', ')
 								}).html('Button'),
 	$submit = $('<input />').attr({
 								id: 'test-submit',
 								type: 'submit',
-								zB: xYCoords.join(',')
+								zB: xYCoords.join(', ')
 								}).html('Input type=submit'),
 	zBInit = function(sel){
 		var container = '#zoombox-container-'+sel.replace('#', '');
 
 		$(sel).zoombox({
-			containerId: container,
-			growFromTagAttr: false,
-			growTagAttr: undefined,
+			containerId: container
 		});
 
-		expect(typeof $(container)).toEqual('object');
-		expect($(container).css('position')).toEqual('absolute');
-		expect($(container).css('width')).toEqual('1px');
-		expect($(container).css('height')).toEqual('1px');
-		expect($(container).css('opacity')).toEqual('0');
+		expect(typeof $(sel).data('zoomboxOptions')).toEqual('object');
 
 	},
 	zBOpen = function(sel){
@@ -37,8 +31,6 @@ describe('Zoombox', function(){
 		
 		$(sel).zoombox({
 			containerId: container,
-			growFromTagAttr: false,
-			growTagAttr: undefined,
 			openCallback: function(){
 				t = 1;
 			}
@@ -65,8 +57,6 @@ describe('Zoombox', function(){
 		
 		$(sel).zoombox({
 			containerId: container,
-			growFromTagAttr: false,
-			growTagAttr: undefined,
 			openCallback: function(){
 				$(sel).click();
 			},
@@ -95,8 +85,6 @@ describe('Zoombox', function(){
 		
 		$(sel).zoombox({
 			containerId: container,
-			growFromTagAttr: false,
-			growTagAttr: undefined,
 			preOpen: function(){
 				$(container).append('<div id="test-div" />');
 			},
@@ -121,8 +109,6 @@ describe('Zoombox', function(){
 		
 		$(sel).zoombox({
 			containerId: container,
-			growFromTagAttr: false,
-			growTagAttr: undefined,
 			openCallback: function(){
 				$(sel).click();
 			},
@@ -146,17 +132,18 @@ describe('Zoombox', function(){
 	},
 	zBGrowFrom = function(sel, attr){
 		var container = '#zoombox-container-'+sel.replace('#', ''),
-			t = 0;
+			t = 0,
+			zoomcalcs;
 
 		$(sel).zoombox({
 			containerId: container,
-			growFromTagAttr: true,
 			growTagAttr: attr,
 			openCallback: null,
 			openCallback: function(){
 				$(sel).click();
 			},
 			closeCallback: function(){
+				zoomcalcs = $(sel).data('zoomcalcs');
 				t = 1;
 			}
 		});
@@ -170,8 +157,8 @@ describe('Zoombox', function(){
 		waits(2000);
 
 		runs(function(){
-			expect(parseInt($(container).css('left'), 10)).toEqual(xYCoords[0]);
-			expect(parseInt($(container).css('top'), 10)).toEqual(xYCoords[1]);
+			expect(parseInt(zoomcalcs.startmap.left, 10)).toEqual(xYCoords[0]);
+			expect(parseInt(zoomcalcs.startmap.top, 10)).toEqual(xYCoords[1]);
 		});
 	};
 	
@@ -194,6 +181,7 @@ describe('Zoombox', function(){
 			
 			//are the defaults what we think they should be?
 			expect(typeof $.fn.zoombox.defaults.containerId).toEqual('string');
+			expect(typeof $.fn.zoombox.defaults.containerClass).toEqual('string');
 			expect(typeof $.fn.zoombox.defaults.containerCloseId).toEqual('string');
 			expect(typeof $.fn.zoombox.defaults.containerCSSMap).toEqual('object');
 			expect(typeof $.fn.zoombox.defaults.containerParent).toEqual('string');
@@ -201,7 +189,6 @@ describe('Zoombox', function(){
 			expect(typeof $.fn.zoombox.defaults.closeWhenSelfIsNotClicked).toEqual('boolean');
 			expect(typeof $.fn.zoombox.defaults.closeCallback).toEqual('object');
 			expect(typeof $.fn.zoombox.defaults.growFromMouse).toEqual('boolean');
-			expect(typeof $.fn.zoombox.defaults.growFromTagAttr).toEqual('boolean');
 			expect(typeof $.fn.zoombox.defaults.growTagAttr).toEqual('undefined');
 			expect(typeof $.fn.zoombox.defaults.openCallback).toEqual('object');
 			expect(typeof $.fn.zoombox.defaults.preOpen).toEqual('object');
@@ -281,9 +268,9 @@ describe('Zoombox', function(){
 			zBPreClose('#test-button');
 		});
 		
-		// it('should grow from a specified tag\'s attribute value', function(){
-		// 	zBGrowFrom('#test-button', 'zB');
-		// });
+		it('should grow from a specified tag\'s attribute value', function(){
+			zBGrowFrom('#test-button', 'zB');
+		});
 		
 	});
 	
@@ -317,9 +304,9 @@ describe('Zoombox', function(){
 			zBPreClose('#test-submit');
 		});
 		
-		// it('should grow from a specified tag\'s attribute value', function(){
-		// 	zBGrowFrom('#test-submit', 'zB');
-		// });
+		it('should grow from a specified tag\'s attribute value', function(){
+			zBGrowFrom('#test-submit', 'zB');
+		});
 		
 	});
 });

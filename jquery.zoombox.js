@@ -140,21 +140,17 @@
 			var params = $trigger.data('zoomboxOptions'),
 				zoomcalcs = _returnZoomcalcs(params, $trigger);
 
-			console.log(zoomcalcs);
-
 			if(params.containerCloseId !== null) {
 				$(params.containerCloseId).fadeOut('fast', function(){
 					if(params.preClose != null){ params.preClose(); }
 					_animate();
 				});
 			} else {
-				console.log('else params.containerCloseId !== null');
 	 			if(params.preClose != null){ params.preClose(); }
 				_animate();
 			}
 
 			function _animate(){
-				console.log('inside close animate');
 				$(params.containerId).animate(zoomcalcs.animapShrink, 
 											params.zoomboxAnimationSpeed, 
 											params.zoomboxEasing, 
@@ -178,7 +174,7 @@
 		if($trigger.data('zoomcalcs') === undefined) {
 			
 			if(params.growFromMouse === true) { origin.x = e.pageX; origin.y = e.pageY; }
-			else if (params.growFromTagAttr === true && params.growTagAttr !== undefined){
+			else if (params.growTagAttr !== undefined){
 				var attrTxt = $(e.currentTarget).attr(params.growTagAttr);
 				var attrArr = attrTxt.split(', ');
 				
@@ -237,7 +233,6 @@
 		closeWhenSelfIsNotClicked:	true,
 		closeCallback:				null,
 		growFromMouse:				false,
-		growFromTagAttr:			false,
 		growTagAttr:				undefined,
 		openCallback:				null,
 		preOpen: 					null,

@@ -37,10 +37,13 @@ p {
 .zoombox-container {
   background-color:#666;
 }
-#zoombox-close{
+a#zoombox-close{
   display: block;
   width: 20px;
   height: 20px;
   background: transparent url('../imgs/close_btn.png') no-repeat; 
-	float: right;
-	}
+  float: right;
+}
+a#zoombox-close:hover{
+	cursor:pointer;
+}
