@@ -9,35 +9,74 @@
 (function($){
 	
 	var ver = '1.0',
+		
+	methods = {
+		init: function(options){
+			return this.each(function(index){
+				var $trigger = $(this),
+					params = $.extend({}, $.fn.zoombox.defaults, options);
+					
+				$trigger.data('zoomboxOptions', params).data('zoomboxState', 'closed');
+				
+				_binds(params, $trigger, index);
+				
+			});
+		},
+		open: function($selector){
+			$selector.click();
+		},
+		close: function(){
+			var $zbContainer = arguments[1] ? $(arguments[1]) : $($.fn.zoombox.defaults.containerId);
+			return this.each(function(index){
+				var $trigger = $(this),
+					params = {};
+					
+				if(index === 0){
+					params = $trigger.data('zoomboxOptions');
+					
+					_zoomClose($trigger);
+				}
+			});
+		},
+		
+		destroy: function(){
+			var $zbContainer = arguments[1] ? $(arguments[1]) : $($.fn.zoombox.defaults.containerId);
+			return this.each(function(index){
+				var $trigger = $(this),
+					params = $trigger.data('zoomboxOptions');
+					
+				if(index === 0){
+					_unBinds($trigger, params);
+					$trigger.data('zoomboxOptions', {});
+					$zbContainer.remove();
+				}
+			});
+		}
+	};
 	
-	$zbContainer,
-	$zbClose,
-	openedBy,
-	
-	_binds = function(params, $trigger, index){
+	function _binds(params, $trigger, index){
 		
 		$trigger.bind('click.zoomboxEvents', function(e){
 			e.preventDefault();
-			
-			if($zbContainer.hasClass('inactive')){
+			if($trigger.data('zoomboxState') == 'closed'){
 				_zoomOpen($trigger, e);
 			} else {
-				_zoomClose('opendBy');
+				_zoomClose($trigger);
 			}
 		});
 		
-		if(index === 0 && params.containerCloseId !== null){
-			$zbClose.bind('click.zoomboxEvents', function(e){
+		if(params.containerCloseId !== null){
+			$(params.containerCloseId).live('click.zoomboxEvents', function(e){
 				e.preventDefault();
 				
-				_zoomClose('opendBy');
+				_zoomClose($trigger);
 			});
 		}
 		
 		if(params.closeWhenEsc === true && index === 0){
 			$(window).bind('keyup.zoomboxEvent', function(e){
 				if(e.which == 27){
-					_zoomClose('opendBy');
+					_zoomClose($trigger);
 				}
 			});
 		}
@@ -48,74 +87,93 @@
 					parents = $(e.target).parents();
 				
 				for(var prop in parents){
-					if(parents[prop] === $zbContainer[0]) { inZoombox = true; }
+					if(parents[prop] === $(params.containerId)[0]) { inZoombox = true; }
 				}
-				
-				if($zbContainer.hasClass('active') && inZoombox === false){
- 					_zoomClose('opendBy');
+				if($(params.containerId).length > 0 && inZoombox === false){
+					_zoomClose($trigger);
 				} 
 			});
 		}
-	},
+	}
 	
-	_unBinds = function($trigger){
+	function _unBinds($trigger, params){
 		$trigger.unbind('.zoomboxEvents');
-		$zbClose.unbind('.zoomboxEvents');
+		$(params.containerCloseId).unbind('.zoomboxEvents');
 		$(window).unbind('.zoomboxEvents');
-	},
+	}
 	
-	_zoomOpen = function($trigger, e){
-		var params = $zbContainer.data('zoomboxOptions'),
-			zoomcalcs = _returnZoomcalcs(params, $trigger, e);
-			
-		$zbContainer.css(zoomcalcs.startmap);
-		
-		if(params.preOpen != null){ params.preOpen(); }
-		_animate();
-		
-		function _animate(){
-		    $zbContainer.css('opacity', '1').animate(zoomcalcs.animapGrow, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
-    			$zbContainer.removeClass('inactive').addClass('active');
+	function _zoomOpen($trigger, e){
+		if($trigger.data('zoomboxState') == 'closed'){
+			var params = $trigger.data('zoomboxOptions'),
+				zoomcalcs = _returnZoomcalcs(params, $trigger, e),
+				$container = $('<div/>').attr('id', _deClassify(params.containerId))
+										.attr('class', _deClassify(params.containerClass))
+										.css(params.containerCSSMap);
 
-    			if(params.containerCloseId !== null) { $zbClose.fadeIn(); }
-    			if(params.openCallback !== null) { params.openCallback(e); }
-    		});
-		}
-	},
-	
-	_zoomClose = function($trigger){
-		var params = $zbContainer.data('zoomboxOptions'),
-			zoomcalcs = _returnZoomcalcs(params, $trigger);
-			
-		if(params.containerCloseId !== null) {
-			$zbClose.fadeOut('fast', function(){
-				if(params.preClose != null){ params.preClose(); }
-				_animate();
-			});
-		} else {
- 			if(params.preClose != null){ params.preClose(); }
+			if(params.containerCloseId !== null) {
+				$container.append('<a id="'+_deClassify(params.containerCloseId)+'" style="display: none;"/>');
+			}
+
+			$(params.containerParent).append($container);
+			$(params.containerId).css(zoomcalcs.startmap);
+
+			if(params.preOpen != null){ params.preOpen(); }
+
 			_animate();
+
+			function _animate(){
+			    $(params.containerId).css('opacity', '1')
+										.animate(zoomcalcs.animapGrow, 
+											params.zoomboxAnimationSpeed, 
+											params.zoomboxEasing, 
+											function(){
+								    			$trigger.data('zoomboxState', 'open');
+												if(params.containerCloseId !== null) { $(params.containerCloseId).fadeIn(); }
+												if(params.openCallback !== null) { params.openCallback(e); }
+											});
+			}
 		}
-		
-		function _animate(){
-			$zbContainer.animate(zoomcalcs.animapShrink, params.zoomboxAnimationSpeed, params.zoomboxEasing, function(){
-				$zbContainer.removeClass('active').addClass('inactive').css('opacity', '0');
-				
-				if(params.closeCallback !== null) { params.closeCallback(); }
-			});
-		}
-	},
+	}
 	
-	_returnZoomcalcs = function(params){
+	function _zoomClose($trigger){
+		if($trigger.data('zoomboxState') == 'open'){
+			var params = $trigger.data('zoomboxOptions'),
+				zoomcalcs = _returnZoomcalcs(params, $trigger);
+
+			console.log(zoomcalcs);
+
+			if(params.containerCloseId !== null) {
+				$(params.containerCloseId).fadeOut('fast', function(){
+					if(params.preClose != null){ params.preClose(); }
+					_animate();
+				});
+			} else {
+				console.log('else params.containerCloseId !== null');
+	 			if(params.preClose != null){ params.preClose(); }
+				_animate();
+			}
+
+			function _animate(){
+				console.log('inside close animate');
+				$(params.containerId).animate(zoomcalcs.animapShrink, 
+											params.zoomboxAnimationSpeed, 
+											params.zoomboxEasing, 
+											function(){
+								    			$trigger.data('zoomboxState', 'closed');
+												$(params.containerId).remove();
+												if(params.closeCallback !== null) { params.closeCallback(); }
+											});
+			}
+		}
+	}
+	
+	function _returnZoomcalcs(params, $trigger){
 		var origin = {},
 			zoomcalcs = {},
 			animapLeft,
 			animapTop,
 			$trigger,
 			e = (arguments[2] !== undefined) ? arguments[2] : undefined;
-			
-			if(typeof arguments[1] == 'object') { $trigger = arguments[1]; openedBy = $trigger; }
-			else if(arguments[1] == 'opendBy'){ $trigger = openedBy; }
 			
 		if($trigger.data('zoomcalcs') === undefined) {
 			
@@ -147,64 +205,15 @@
 		}
 		
 		return zoomcalcs;
-	},
+	}
 	
-	methods = {
-		init: function(options){
-			return this.each(function(index){
-				var $trigger = $(this),
-					params = $.extend($.fn.zoombox.defaults, options),
-					$container = $('<div/>').attr('id', params.containerId);
-				
-				if(index === 0){
-					$(params.containerParent).append($container);
-					$zbContainer = $('#'+params.containerId);
-				
-					$zbContainer.data('zoomboxOptions', params).addClass('inactive').css(params.containerCSSMap);
-				
-					if(params.containerCloseId !== null) {
-						$zbContainer.append('<a id="'+params.containerCloseId+'" style="display: none;"/>');
-						$zbClose = $('#'+params.containerCloseId);
-					}
-				}
-				
-				_binds(params, $trigger, index);
-				
-			});
-		},
-		open: function($selector){
-			$selector.click();
-		},
-		
-		close: function(){
-			if($zbContainer.length >= 1){ $zbContainer = (arguments[1]) ? $(arguments[1]) : $('#'+$.fn.zoombox.defaults.containerId); }
-			return this.each(function(index){
-				var $trigger = $(this),
-					params = {};
-					
-				if(index === 0){
-					params = $zbContainer.data('zoomboxOptions');
-					
-					_zoomClose('opendBy');
-				}
-			});
-		},
-		
-		destroy: function(){
-			if($zbContainer.length >= 1){ $zbContainer = (arguments[1]) ? $(arguments[1]) : $('#'+$.fn.zoombox.defaults.containerId); }
-			return this.each(function(index){
-				var $trigger = $(this),
-					params = {};
-					
-				if(index === 0){
-					$zbContainer.data('zoomboxOptions', params);
-					_unBinds($trigger);
-					$zbContainer.remove();
-					if(params.containerCloseId !== null) { $zbClose.remove(); }
-				}
-			});
+	function _deClassify(str){
+		if(str.indexOf('#') == 0 || str.indexOf('.') == 0){
+			return str.slice(1);
+		} else {
+			return str;
 		}
-	};
+	}
 	
 	$.fn.zoombox = function(method) {
 		if (methods[method]) {
@@ -219,8 +228,9 @@
 	$.fn.zoombox.ver = function() { return ver; };
 	
 	$.fn.zoombox.defaults = {
-		containerId:				"zoombox-container",
-		containerCloseId:			"zoombox-close",
+		containerId:				"#zoombox-container",
+		containerClass: 			".zoombox-container",
+		containerCloseId:			"#zoombox-close",
 		containerCSSMap:			{opacity: '0', width: '1px', height: '1px', position: 'absolute'},
 		containerParent:			'body',
 		closeWhenEsc:				true,

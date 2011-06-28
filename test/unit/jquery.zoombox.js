@@ -16,7 +16,7 @@ describe('Zoombox', function(){
 								zB: xYCoords.join(',')
 								}).html('Input type=submit'),
 	zBInit = function(sel){
-		var container = 'zoombox-container-'+sel.replace('#', '');
+		var container = '#zoombox-container-'+sel.replace('#', '');
 
 		$(sel).zoombox({
 			containerId: container,
@@ -24,16 +24,15 @@ describe('Zoombox', function(){
 			growTagAttr: undefined,
 		});
 
-		expect(typeof $('#'+container)).toEqual('object');
-		expect($('#'+container).css('position')).toEqual('absolute');
-		expect($('#'+container).css('width')).toEqual('1px');
-		expect($('#'+container).css('height')).toEqual('1px');
-		expect($('#'+container).css('opacity')).toEqual('0');
-		expect($('#'+container).hasClass('inactive')).toBeTruthy();
+		expect(typeof $(container)).toEqual('object');
+		expect($(container).css('position')).toEqual('absolute');
+		expect($(container).css('width')).toEqual('1px');
+		expect($(container).css('height')).toEqual('1px');
+		expect($(container).css('opacity')).toEqual('0');
 
 	},
 	zBOpen = function(sel){
-		var container = 'zoombox-container-'+sel.replace('#', ''),
+		var container = '#zoombox-container-'+sel.replace('#', ''),
 			t = 0;
 		
 		$(sel).zoombox({
@@ -52,16 +51,16 @@ describe('Zoombox', function(){
 		});
 
 		runs(function(){
-			expect(typeof $('#'+container)).toEqual('object');
-			expect($('#'+container).css('position')).toEqual('absolute');
-			expect($('#'+container).css('width')).toEqual($.fn.zoombox.defaults.targetWidth+'px');
-			expect($('#'+container).css('height')).toEqual($.fn.zoombox.defaults.targetHeight+'px');
-			expect($('#'+container).css('opacity')).toEqual('1');
-			expect($('#'+container).hasClass('active')).toBeTruthy();
+			expect(typeof $(container)).toEqual('object');
+			expect($(container).css('position')).toEqual('absolute');
+			expect($(container).css('width')).toEqual($.fn.zoombox.defaults.targetWidth+'px');
+			expect($(container).css('height')).toEqual($.fn.zoombox.defaults.targetHeight+'px');
+			expect($(container).css('opacity')).toEqual('1');
+			// expect($(container).hasClass('active')).toBeTruthy();
 		});
 	},
 	zBClose = function(sel){
-	    var container = 'zoombox-container-'+sel.replace('#', ''),
+	    var container = '#zoombox-container-'+sel.replace('#', ''),
 			t = 0;
 		
 		$(sel).zoombox({
@@ -83,16 +82,15 @@ describe('Zoombox', function(){
 		});
 
 		runs(function(){
-			expect(typeof $('#'+container)).toEqual('object');
-			expect($('#'+container).css('position')).toEqual('absolute');
-			expect($('#'+container).css('width')).toEqual('1px');
-			expect($('#'+container).css('height')).toEqual('1px');
-			expect($('#'+container).css('opacity')).toEqual('0');
-			expect($('#'+container).hasClass('inactive')).toBeTruthy();
+			expect(typeof $(container)).toEqual('object');
+			expect($(container).css('position')).toEqual('absolute');
+			expect($(container).css('width')).toEqual('1px');
+			expect($(container).css('height')).toEqual('1px');
+			expect($(container).css('opacity')).toEqual('0');
 		});
 	},
 	zBPreOpen = function(sel){
-	    var container = 'zoombox-container-'+sel.replace('#', ''),
+	    var container = '#zoombox-container-'+sel.replace('#', ''),
 			t = 0;
 		
 		$(sel).zoombox({
@@ -100,7 +98,7 @@ describe('Zoombox', function(){
 			growFromTagAttr: false,
 			growTagAttr: undefined,
 			preOpen: function(){
-				$('#'+container).append('<div id="test-div" />');
+				$(container).append('<div id="test-div" />');
 			},
 			openCallback: function(){
 				t = 1;
@@ -114,11 +112,11 @@ describe('Zoombox', function(){
 		});
 
 		runs(function(){
-			expect(typeof $('#'+container+' #test-div')).toEqual('object');
+			expect(typeof $(container+' #test-div')).toEqual('object');
 		});
 	},
 	zBPreClose = function(sel){
-	    var container = 'zoombox-container-'+sel.replace('#', ''),
+	    var container = '#zoombox-container-'+sel.replace('#', ''),
 			t = 0;
 		
 		$(sel).zoombox({
@@ -129,7 +127,7 @@ describe('Zoombox', function(){
 				$(sel).click();
 			},
 			preClose: function(){
-				$('#'+container).append('<div id="test-div" />');
+				$(container).append('<div id="test-div" />');
 			},
 			closeCallback: function(){
 				t = 1;
@@ -143,11 +141,11 @@ describe('Zoombox', function(){
 		});
 
 		runs(function(){
-			expect(typeof $('#'+container+' #test-div')).toEqual('object');
+			expect(typeof $(container+' #test-div')).toEqual('object');
 		});
 	},
 	zBGrowFrom = function(sel, attr){
-		var container = 'zoombox-container-'+sel.replace('#', ''),
+		var container = '#zoombox-container-'+sel.replace('#', ''),
 			t = 0;
 
 		$(sel).zoombox({
@@ -172,8 +170,8 @@ describe('Zoombox', function(){
 		waits(2000);
 
 		runs(function(){
-			expect(parseInt($('#'+container).css('left'), 10)).toEqual(xYCoords[0]);
-			expect(parseInt($('#'+container).css('top'), 10)).toEqual(xYCoords[1]);
+			expect(parseInt($(container).css('left'), 10)).toEqual(xYCoords[0]);
+			expect(parseInt($(container).css('top'), 10)).toEqual(xYCoords[1]);
 		});
 	};
 	
