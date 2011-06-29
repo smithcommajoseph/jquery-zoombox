@@ -119,7 +119,7 @@
 			$(params.containerParent).append($container);
 			$($trigger.data('zoomboxTarget')).css(zoomcalcs.startmap);
 
-			if(params.preOpen != null){ params.preOpen(); }
+			if(params.preOpen != null){ params.preOpen(e); }
 			
 			_animate();
 
