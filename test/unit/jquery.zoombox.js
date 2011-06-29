@@ -16,22 +16,19 @@ describe('Zoombox', function(){
 								zB: xYCoords.join(', ')
 								}).html('Input type=submit'),
 	zBInit = function(sel){
-		var container = '#zoombox-container-'+sel.replace('#', '');
 
-		$(sel).zoombox({
-			containerId: container
-		});
+		$(sel).zoombox();
 
 		expect(typeof $(sel).data('zoomboxOptions')).toEqual('object');
 
 	},
 	zBOpen = function(sel){
-		var container = '#zoombox-container-'+sel.replace('#', ''),
+		var container,
 			t = 0;
 		
 		$(sel).zoombox({
-			containerId: container,
 			openCallback: function(){
+				container = $(sel).data('zoomboxTarget');
 				t = 1;
 			}
 		});
@@ -52,12 +49,12 @@ describe('Zoombox', function(){
 		});
 	},
 	zBClose = function(sel){
-	    var container = '#zoombox-container-'+sel.replace('#', ''),
+	    var container,
 			t = 0;
 		
 		$(sel).zoombox({
-			containerId: container,
 			openCallback: function(){
+				container = $(sel).data('zoomboxTarget');
 				$(sel).click();
 			},
 			closeCallback: function(){
@@ -70,22 +67,18 @@ describe('Zoombox', function(){
 		waitsFor(function(){
 			return t === 1;
 		});
-
+		
 		runs(function(){
-			expect(typeof $(container)).toEqual('object');
-			expect($(container).css('position')).toEqual('absolute');
-			expect($(container).css('width')).toEqual('1px');
-			expect($(container).css('height')).toEqual('1px');
-			expect($(container).css('opacity')).toEqual('0');
+			expect($(container).length).toEqual(0);
 		});
 	},
 	zBPreOpen = function(sel){
-	    var container = '#zoombox-container-'+sel.replace('#', ''),
+	    var container = $.fn.zoombox.defaults.containerClass,
 			t = 0;
 		
 		$(sel).zoombox({
-			containerId: container,
 			preOpen: function(){
+				container = $(sel).data('zoomboxTarget');
 				$(container).append('<div id="test-div" />');
 			},
 			openCallback: function(){
@@ -104,13 +97,14 @@ describe('Zoombox', function(){
 		});
 	},
 	zBPreClose = function(sel){
-	    var container = '#zoombox-container-'+sel.replace('#', ''),
+	    var container,
 			t = 0;
 		
 		$(sel).zoombox({
-			containerId: container,
 			openCallback: function(){
 				$(sel).click();
+				container = $(sel).data('zoomboxTarget');
+				
 			},
 			preClose: function(){
 				$(container).append('<div id="test-div" />');
@@ -131,18 +125,12 @@ describe('Zoombox', function(){
 		});
 	},
 	zBGrowFrom = function(sel, attr){
-		var container = '#zoombox-container-'+sel.replace('#', ''),
-			t = 0,
+		var t = 0,
 			zoomcalcs;
 
 		$(sel).zoombox({
-			containerId: container,
 			growTagAttr: attr,
-			openCallback: null,
 			openCallback: function(){
-				$(sel).click();
-			},
-			closeCallback: function(){
 				zoomcalcs = $(sel).data('zoomcalcs');
 				t = 1;
 			}
@@ -154,9 +142,9 @@ describe('Zoombox', function(){
 			return t === 1;
 		});
 
-		waits(2000);
-
 		runs(function(){
+			console.log(zoomcalcs);
+			
 			expect(parseInt(zoomcalcs.startmap.left, 10)).toEqual(xYCoords[0]);
 			expect(parseInt(zoomcalcs.startmap.top, 10)).toEqual(xYCoords[1]);
 		});
@@ -180,9 +168,9 @@ describe('Zoombox', function(){
 			expect(expected).toEqual(actual);
 			
 			//are the defaults what we think they should be?
-			expect(typeof $.fn.zoombox.defaults.containerId).toEqual('string');
+			expect(typeof $.fn.zoombox.defaults.containerIdPre).toEqual('string');
 			expect(typeof $.fn.zoombox.defaults.containerClass).toEqual('string');
-			expect(typeof $.fn.zoombox.defaults.containerCloseId).toEqual('string');
+			expect(typeof $.fn.zoombox.defaults.containerCloseClass).toEqual('string');
 			expect(typeof $.fn.zoombox.defaults.containerCSSMap).toEqual('object');
 			expect(typeof $.fn.zoombox.defaults.containerParent).toEqual('string');
 			expect(typeof $.fn.zoombox.defaults.closeWhenEsc).toEqual('boolean');
