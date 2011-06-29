@@ -18,7 +18,7 @@
 					
 				$trigger.data('zoomboxOptions', params)
 						.data('zoomboxState', 'closed')
-						.data('zoomboxTarget', Math.floor(Math.random()*10000)+'-'+Math.floor(Math.random()*100));
+						.data('zoomboxTarget', params.containerIdPre+'-'+Math.floor(Math.random()*10000)+Math.floor(Math.random()*100));
 				
 				_binds(params, $trigger);
 				
@@ -28,7 +28,7 @@
 			$selector.click();
 		},
 		close: function(){
-			var $zbContainer = arguments[1] ? $(arguments[1]) : $($.fn.zoombox.defaults.containerId);
+			var $zbContainer = arguments[1] ? $(arguments[1]) : $($.fn.zoombox.defaults.containerIdPre);
 			return this.each(function(index){
 				var $trigger = $(this),
 					params = {};
@@ -42,7 +42,7 @@
 		},
 		
 		destroy: function(){
-			var $zbContainer = arguments[1] ? $(arguments[1]) : $($.fn.zoombox.defaults.containerId);
+			var $zbContainer = arguments[1] ? $(arguments[1]) : $($.fn.zoombox.defaults.containerIdPre);
 			return this.each(function(index){
 				var $trigger = $(this),
 					params = $trigger.data('zoomboxOptions');
@@ -68,7 +68,7 @@
 		});
 		
 		if(params.containerCloseClass !== null){
-			$(params.containerCloseClass).live('click.zoomboxEvents', function(e){
+			$($trigger.data('zoomboxTarget')+' '+params.containerCloseClass).live('click.zoomboxEvents', function(e){
 				e.preventDefault();
 				
 				_zoomClose($trigger);
@@ -89,9 +89,9 @@
 					parents = $(e.target).parents();
 				
 				for(var prop in parents){
-					if(parents[prop] === $(params.containerId)[0]) { inZoombox = true; }
+					if(parents[prop] === $($trigger.data('zoomboxTarget'))[0]) { inZoombox = true; }
 				}
-				if($(params.containerId).length > 0 && inZoombox === false){
+				if(inZoombox === false){
 					_zoomClose($trigger);
 				} 
 			});
@@ -108,29 +108,31 @@
 		if($trigger.data('zoomboxState') == 'closed'){
 			var params = $trigger.data('zoomboxOptions'),
 				zoomcalcs = _returnZoomcalcs(params, $trigger, e),
-				$container = $('<div/>').attr('id', _deClassify(params.containerId))
+				$container = $('<div/>').attr('id', _deClassify($trigger.data('zoomboxTarget')))
 										.attr('class', _deClassify(params.containerClass))
 										.css(params.containerCSSMap);
 
 			if(params.containerCloseClass !== null) {
 				$container.append('<a class="'+_deClassify(params.containerCloseClass)+'" style="display: none;"/>');
 			}
-
+			
 			$(params.containerParent).append($container);
-			$(params.containerId).css(zoomcalcs.startmap).data('zoomboxTrigger', $trigger.data('zoomboxTarget'));
+			$($trigger.data('zoomboxTarget')).css(zoomcalcs.startmap);
 
 			if(params.preOpen != null){ params.preOpen(); }
 			
 			_animate();
 
 			function _animate(){
-			    $(params.containerId).css('opacity', '1')
+			    $($trigger.data('zoomboxTarget')).css('opacity', '1')
 										.animate(zoomcalcs.animapGrow, 
 											params.zoomboxAnimationSpeed, 
 											params.zoomboxEasing, 
 											function(){
 								    			$trigger.data('zoomboxState', 'open');
-												if(params.containerCloseClass !== null) { $(params.containerCloseClass).fadeIn(); }
+												if(params.containerCloseClass !== null) { 
+													$($trigger.data('zoomboxTarget')+' '+params.containerCloseClass).fadeIn(); 
+												}
 												if(params.openCallback !== null) { params.openCallback(e); }
 											});
 			}
@@ -142,10 +144,10 @@
 			var params = $trigger.data('zoomboxOptions'),
 				zoomcalcs = _returnZoomcalcs(params, $trigger);
 				
-			if($(params.containerId).data('zoomboxTrigger') == $trigger.data('zoomboxTarget')){
+			// if($($trigger.data('zoomboxTarget')).data('zoomboxTrigger') == $trigger.data('zoomboxTarget')){
 				
 				if(params.containerCloseClass !== null) {
-					$(params.containerCloseClass).fadeOut('fast', function(){
+					$($trigger.data('zoomboxTarget')+' '+params.containerCloseClass).fadeOut('fast', function(){
 						if(params.preClose != null){ params.preClose(); }
 						_animate();
 					});
@@ -155,17 +157,17 @@
 				}
 
 				function _animate(){
-					$(params.containerId).animate(zoomcalcs.animapShrink, 
+					$($trigger.data('zoomboxTarget')).animate(zoomcalcs.animapShrink, 
 												params.zoomboxAnimationSpeed, 
 												params.zoomboxEasing, 
 												function(){
 									    			$trigger.data('zoomboxState', 'closed');
-													$(params.containerId).remove();
+													$($trigger.data('zoomboxTarget')).remove();
 													if(params.closeCallback !== null) { params.closeCallback(); }
 												});
 				}
 			}
-		}
+		// }
 	}
 	
 	function _returnZoomcalcs(params, $trigger){
@@ -229,7 +231,7 @@
 	$.fn.zoombox.ver = function() { return ver; };
 	
 	$.fn.zoombox.defaults = {
-		containerId:				"#zoombox-container",
+		containerIdPre:				"#zoombox-container",
 		containerClass: 			".zoombox-container",
 		containerCloseClass:		".zoombox-close",
 		containerCSSMap:			{opacity: '0', width: '1px', height: '1px', position: 'absolute'},
