@@ -28,7 +28,6 @@
 			$selector.click();
 		},
 		close: function(){
-			var $zbContainer = arguments[1] ? $(arguments[1]) : $($.fn.zoombox.defaults.containerIdPre);
 			return this.each(function(index){
 				var $trigger = $(this),
 					params = {};
