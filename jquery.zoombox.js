@@ -24,8 +24,8 @@
 				
 			});
 		},
-		open: function($selector){
-			$selector.click();
+		open: function(selector){
+			$(selector).click();
 		},
 		close: function(){
 			return this.each(function(index){
