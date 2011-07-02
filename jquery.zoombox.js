@@ -84,7 +84,7 @@
 		}
 		
 		if(params.closeWhenSelfIsNotClicked === true){
-			$(params.containerParent).bind('click.zoomboxEvents', function(e){
+			$(window).bind('click.zoomboxEvents', function(e){
 				var inZoombox = false,
 					parents = $(e.target).parents();
 				
@@ -163,6 +163,7 @@
 												function(){
 									    			$trigger.data('zoomboxState', 'closed');
 													$($trigger.data('zoomboxTarget')).remove();
+													$trigger.removeData('zoomcalcs');
 													if(params.closeCallback !== null) { params.closeCallback(); }
 												});
 				}
