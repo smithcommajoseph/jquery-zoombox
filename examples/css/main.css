@@ -23,7 +23,7 @@ h2 {
 
 code {
 	display: block;
-	width: 640px;
+	width: 800px;
 	padding: 20px;
 	margin-bottom: 20px;
 	background-color: #eee;
@@ -35,7 +35,7 @@ p {
 	margin-bottom: 40px;
 	color: #999;
 }
-
+p.note{ margin-bottom:20px;}
 .zoombox-container {
   background-color:#666;
 }
@@ -51,5 +51,4 @@ p {
 }
 .zoombox-container p{
 	color: #fff;
-
 }
