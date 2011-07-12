@@ -8,7 +8,7 @@
 
 (function($){
 	
-	var ver = '1.1',
+	var ver = '1.2',
 		
 	methods = {
 		init: function(options){
