@@ -1,21 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>jQuery Zoombox Tests</title>
-    <link rel="Stylesheet" media="screen" href="qunit/qunit/qunit.css" />
+  <title>jQuery Zoombox Tests</title>
+
+  <link rel="shortcut icon" type="image/png" href="jasmine/images/jasmine_favicon.png">
+
+  <link rel="stylesheet" type="text/css" href="jasmine/lib/jasmine.css">
+  <script type="text/javascript" src="jasmine/lib/jasmine.js"></script>
+  <script type="text/javascript" src="jasmine/lib/jasmine-html.js"></script>
+  
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+  <script type="text/javascript" src="../jquery.zoombox.js"></script>
+  <script type="text/javascript" src="unit/jquery.zoombox.js"></script>
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      var jasmineEnv = jasmine.getEnv();
+      jasmineEnv.updateInterval = 1000;
     
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
-    <script src="qunit/qunit/qunit.js"></script>
-    <script type="text/javascript" src="../jquery.zoombox.js"></script>
-    <script src="unit/jquery.zoombox.js"></script>
+      var trivialReporter = new jasmine.TrivialReporter();
+    
+      jasmineEnv.addReporter(trivialReporter);
+    
+      jasmineEnv.specFilter = function(spec) {
+        return trivialReporter.specFilter(spec);
+      };
+    
+      var currentWindowOnload = window.onload;
+    
+      window.onload = function() {
+        if (currentWindowOnload) {
+          currentWindowOnload();
+        }
+        execJasmine();
+      };
+    
+      function execJasmine() {
+        jasmineEnv.execute();
+      }
+    
+    })();
+  </script>
+
 </head>
+
 <body>
-    <div id="wrap">
-        <h1 id="qunit-header">jQuery Zoombox Tests</h1>
-        <h2 id="qunit-banner"></h2>
-        <h2 id="qunit-userAgent"></h2>
-        <ol id="qunit-tests"></ol>
-    </div>
 </body>
 </html>

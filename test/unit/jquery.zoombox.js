@@ -1,42 +1,163 @@
-(function($){
-	//some vars
-	var xYCoords = '230, 230',
+describe('Zoombox', function(){
+	var xYCoords = [230, 230],
 	$anchor = $('<a />').attr({
 								href: 'json_test.html',
 								id: 'test-anchor',
-								rel: xYCoords
+								rel: xYCoords.join(', ')
 								}).html('Anchor'),
 	$button = $('<button />').attr({
 								id: 'test-button',
 								type: 'submit',
-								zB: xYCoords
+								zB: xYCoords.join(', ')
 								}).html('Button'),
 	$submit = $('<input />').attr({
 								id: 'test-submit',
 								type: 'submit',
-								zB: xYCoords
+								zB: xYCoords.join(', ')
 								}).html('Input type=submit'),
-	zoomboxAnchorSetup = function(){
-		$('body').append($anchor);
-	},
-	zoomboxAnchorTeardown = function(){
-		$('#test-anchor').zoombox('destroy');
-		$('#test-anchor').remove();
-	};
+	zBInit = function(sel){
 
-	$(document).ready(function(){
+		$(sel).zoombox();
+
+		expect(typeof $(sel).data('zoomboxOptions')).toEqual('object');
+
+	},
+	zBOpen = function(sel){
+		var container,
+			t = 0;
 		
-		module('Defaults');
+		$(sel).zoombox({
+			openCallback: function(){
+				container = $(sel).data('zoomboxTarget');
+				t = 1;
+			}
+		});
+
+		$(sel).click();
+
+		waitsFor(function(){
+			return t === 1;
+		});
+
+		runs(function(){
+			expect(typeof $(container)).toEqual('object');
+			expect($(container).css('position')).toEqual('absolute');
+			expect($(container).css('width')).toEqual($.fn.zoombox.defaults.targetWidth+'px');
+			expect($(container).css('height')).toEqual($.fn.zoombox.defaults.targetHeight+'px');
+			expect($(container).css('opacity')).toEqual('1');
+			// expect($(container).hasClass('active')).toBeTruthy();
+		});
+	},
+	zBClose = function(sel){
+	    var container,
+			t = 0;
 		
-		test('Defaults ob and props', function(){
+		$(sel).zoombox({
+			openCallback: function(){
+				container = $(sel).data('zoomboxTarget');
+				$(sel).click();
+			},
+			closeCallback: function(){
+				t = 1;
+			}
+		});
+
+		$(sel).click();
+
+		waitsFor(function(){
+			return t === 1;
+		});
+		
+		runs(function(){
+			expect($(container).length).toEqual(0);
+		});
+	},
+	zBPreOpen = function(sel){
+	    var container = $.fn.zoombox.defaults.containerClass,
+			t = 0;
+		
+		$(sel).zoombox({
+			preOpen: function(){
+				container = $(sel).data('zoomboxTarget');
+				$(container).append('<div id="test-div" />');
+			},
+			openCallback: function(){
+				t = 1;
+			}
+		});
+
+		$(sel).click();
+
+		waitsFor(function(){
+			return t === 1;
+		});
+
+		runs(function(){
+			expect(typeof $(container+' #test-div')).toEqual('object');
+		});
+	},
+	zBPreClose = function(sel){
+	    var container,
+			t = 0;
+		
+		$(sel).zoombox({
+			openCallback: function(){
+				$(sel).click();
+				container = $(sel).data('zoomboxTarget');
+				
+			},
+			preClose: function(){
+				$(container).append('<div id="test-div" />');
+			},
+			closeCallback: function(){
+				t = 1;
+			}
+		});
+
+		$(sel).click();
+
+		waitsFor(function(){
+			return t === 1;
+		});
+
+		runs(function(){
+			expect(typeof $(container+' #test-div')).toEqual('object');
+		});
+	},
+	zBGrowFrom = function(sel, attr){
+		var t = 0,
+			zoomcalcs;
+
+		$(sel).zoombox({
+			growTagAttr: attr,
+			openCallback: function(){
+				zoomcalcs = $(sel).data('zoomcalcs');
+				t = 1;
+			}
+		});
+
+		$(sel).click();
+
+		waitsFor(function(){
+			return t === 1;
+		});
+
+		runs(function(){
+			console.log(zoomcalcs);
 			
-			expect(19);
-			
+			expect(parseInt(zoomcalcs.startmap.left, 10)).toEqual(xYCoords[0]);
+			expect(parseInt(zoomcalcs.startmap.top, 10)).toEqual(xYCoords[1]);
+		});
+	};
+	
+	//
+	describe('Defaults', function(){
+		it('should have Properties', function(){
 			//does the defaults object exist
-			equals(typeof $.fn.zoombox.defaults, 'object', '$.fn.zoombox.defaults should be an object');
+			expect(typeof $.fn.zoombox.defaults).toEqual('object');
 			
 			//how many defaults are there?
-			var expected = 17,
+			var expected = 19,
 				actual = 0,
 				prop;
 				
@@ -44,64 +165,136 @@
 				if($.fn.zoombox.defaults.hasOwnProperty(prop)) { actual++; }
 			}
 			
-			equals(expected, actual, 'There should be '+expected+' defaults');
+			expect(expected).toEqual(actual);
 			
 			//are the defaults what we think they should be?
-			equals(typeof $.fn.zoombox.defaults.containerId, 'string', '$.fn.zoombox.defaults.containerId should exist and be typeof "string"');
-			equals(typeof $.fn.zoombox.defaults.containerCloseId, 'string', '$.fn.zoombox.defaults.containerCloseId should exist and be typeof "string"');
-			equals(typeof $.fn.zoombox.defaults.containerCSSMap, 'object', '$.fn.zoombox.defaults.containerCSSMap should exist and be typeof "object"');
-			equals(typeof $.fn.zoombox.defaults.containerParent, 'string', '$.fn.zoombox.defaults.containerParent should exist and be typeof "string"');
-			equals(typeof $.fn.zoombox.defaults.closeWhenEsc, 'boolean', '$.fn.zoombox.defaults.closeWhenEsc should exist and be typeof "boolean"');
-			equals(typeof $.fn.zoombox.defaults.closeWhenSelfIsNotClicked, 'boolean', '$.fn.zoombox.defaults.closeWhenSelfIsNotClicked should exist and be typeof "boolean"');
-			equals(typeof $.fn.zoombox.defaults.closeCallback, 'object', '$.fn.zoombox.defaults.closeCallback should exist and be typeof "object"');
-			equals(typeof $.fn.zoombox.defaults.growFromMouse, 'boolean', '$.fn.zoombox.defaults.growFromMouse should exist and be typeof "boolean"');
-			equals(typeof $.fn.zoombox.defaults.growFromTagAttr, 'boolean', '$.fn.zoombox.defaults.growFromTagAttr should exist and be typeof "boolean"');
-			equals(typeof $.fn.zoombox.defaults.growTagAttr, 'undefined', '$.fn.zoombox.defaults.growTagAttr should exist and be typeof "undefined"');
-			equals(typeof $.fn.zoombox.defaults.openCallback, 'object', '$.fn.zoombox.defaults.openCallback should exist and be typeof "object"');
-			equals(typeof $.fn.zoombox.defaults.targetHeight, 'string', '$.fn.zoombox.defaults.targetHeight should exist and be typeof "string"');
-			equals(typeof $.fn.zoombox.defaults.targetWidth, 'string', '$.fn.zoombox.defaults.targetWidth should exist and be typeof "string"');
-			equals(typeof $.fn.zoombox.defaults.targetPosX, 'undefined', '$.fn.zoombox.defaults.targetPosX should exist and be typeof "undefined"');
-			equals(typeof $.fn.zoombox.defaults.targetPosY, 'undefined', '$.fn.zoombox.defaults.targetPosY should exist and be typeof "undefined"');
-			equals(typeof $.fn.zoombox.defaults.zoomboxEasing, 'string', '$.fn.zoombox.defaults.zoomboxEasing should exist and be typeof "string"');
-			equals(typeof $.fn.zoombox.defaults.zoomboxAnimationSpeed, 'string', '$.fn.zoombox.defaults.zoomboxAnimationSpeed should exist and be typeof "string"');
+			expect(typeof $.fn.zoombox.defaults.containerIdPre).toEqual('string');
+			expect(typeof $.fn.zoombox.defaults.containerClass).toEqual('string');
+			expect(typeof $.fn.zoombox.defaults.containerCloseClass).toEqual('string');
+			expect(typeof $.fn.zoombox.defaults.containerCSSMap).toEqual('object');
+			expect(typeof $.fn.zoombox.defaults.containerParent).toEqual('string');
+			expect(typeof $.fn.zoombox.defaults.closeWhenEsc).toEqual('boolean');
+			expect(typeof $.fn.zoombox.defaults.closeWhenSelfIsNotClicked).toEqual('boolean');
+			expect(typeof $.fn.zoombox.defaults.closeCallback).toEqual('object');
+			expect(typeof $.fn.zoombox.defaults.growFromMouse).toEqual('boolean');
+			expect(typeof $.fn.zoombox.defaults.growTagAttr).toEqual('undefined');
+			expect(typeof $.fn.zoombox.defaults.openCallback).toEqual('object');
+			expect(typeof $.fn.zoombox.defaults.preOpen).toEqual('object');
+			expect(typeof $.fn.zoombox.defaults.preClose).toEqual('object');
+			expect(typeof $.fn.zoombox.defaults.targetHeight).toEqual('string');
+			expect(typeof $.fn.zoombox.defaults.targetWidth).toEqual('string');
+			expect(typeof $.fn.zoombox.defaults.targetPosX).toEqual('undefined');
+			expect(typeof $.fn.zoombox.defaults.targetPosY).toEqual('undefined');
+			expect(typeof $.fn.zoombox.defaults.zoomboxEasing).toEqual('string');
+			expect(typeof $.fn.zoombox.defaults.zoomboxAnimationSpeed).toEqual('string');
 		});
-
-		module('Zoombox Functionality (Anchor)', {setup: zoomboxAnchorSetup, teardown: zoomboxAnchorTeardown});
-		
-		test('Basic Setup (Pre-zoomed)', function(){
-			
-			expect(6);
-			
-			$('#test-anchor').zoombox();
-			
-			equals(typeof $('#zoombox-container'), 'object', 'Zoombox container should exist in the dom');
-			equals($('#'+$.fn.zoombox.defaults.containerId).css('position'), 'absolute', 'Zoombox container position should be "absolute"');
-			equals($('#'+$.fn.zoombox.defaults.containerId).css('width'), '1px', 'Zoombox container width should be "1px"');
-			equals($('#'+$.fn.zoombox.defaults.containerId).css('height'), '1px', 'Zoombox container height should be "1px"');
-			equals($('#'+$.fn.zoombox.defaults.containerId).css('opacity'), '0', 'Zoombox container opacity should be "0"');
-			equals($('#'+$.fn.zoombox.defaults.containerId).hasClass('inactive'), true, 'Zoombox container should have the class "inactive"');
+	});
+	
+	//
+	describe('Anchors', function(){
+		beforeEach(function(){
+			$('body').append($anchor);
+		});
+		afterEach(function(){
+			$('#test-anchor').zoombox('destroy');
+			$('#test-anchor').remove();
 		});
 		
-		test('Basic Setup (Open)', function(){
-			
-			expect(6);
-			
-			stop();
-			
-			$('#test-anchor').zoombox({openCallback: function(){
-				equals(typeof $('#zoombox-container'), 'object', 'Zoombox container should exist in the dom');
-				equals($('#'+$.fn.zoombox.defaults.containerId).css('position'), 'absolute', 'Zoombox container position should be "absolute"');
-				equals($('#'+$.fn.zoombox.defaults.containerId).css('width'), $.fn.zoombox.defaults.targetWidth+'px', 'Zoombox container width should be "'+$.fn.zoombox.defaults.targetWidth+'px"');
-				equals($('#'+$.fn.zoombox.defaults.containerId).css('height'), $.fn.zoombox.defaults.targetHeight+'px', 'Zoombox container height should be "'+$.fn.zoombox.defaults.targetHeight+'px"');
-				equals($('#'+$.fn.zoombox.defaults.containerId).css('opacity'), '1', 'Zoombox container opacity should be "1"');
-				equals($('#'+$.fn.zoombox.defaults.containerId).hasClass('active'), true, 'Zoombox container should have the class "active"');
-				
-				start();
-			}});
-			
-			$('#test-anchor').click();
-			
+		it('should initalize', function(){
+			zBInit('#test-anchor');
+		});
+		
+		it('should open', function(){
+			zBOpen('#test-anchor');
+		});
+		
+		it('should close', function(){
+			zBClose('#test-anchor');
+		});
+		
+		it('should fire a preOpen fn when defined', function(){
+			zBPreOpen('#test-anchor');
+		});
+		
+		it('should fire a preClose fn when defined', function(){
+			zBPreClose('#test-anchor');
+		});
+		
+		it('should grow from a specified tag\'s attribute value', function(){
+			zBGrowFrom('#test-anchor', 'rel');
 		});
 		
 	});
-})(jQuery)
+
+	//
+	describe('Buttons', function(){
+		beforeEach(function(){
+			$('body').append($button);
+		});
+		afterEach(function(){
+			$('#test-button').zoombox('destroy');
+			$('#test-button').remove();
+		});
+		
+		it('should initalize', function(){
+			zBInit('#test-button');
+		});
+		
+		it('should open', function(){
+			zBOpen('#test-button');
+		});
+		
+		it('should close', function(){
+			zBClose('#test-button');
+		});
+		
+		it('should fire a preOpen fn when defined', function(){
+			zBPreOpen('#test-button');
+		});
+		
+		it('should fire a preClose fn when defined', function(){
+			zBPreClose('#test-button');
+		});
+		
+		it('should grow from a specified tag\'s attribute value', function(){
+			zBGrowFrom('#test-button', 'zB');
+		});
+		
+	});
+	
+	//
+	describe('Input type=submit', function(){
+		beforeEach(function(){
+			$('body').append($submit);
+		});
+		afterEach(function(){
+			$('#test-submit').zoombox('destroy');
+			$('#test-submit').remove();
+		});
+		
+		it('should initalize', function(){
+			zBInit('#test-submit');
+		});
+		
+		it('should open', function(){
+			zBOpen('#test-submit');
+		});
+		
+		it('should close', function(){
+			zBClose('#test-submit');
+		});
+		
+		it('should fire a preOpen fn when defined', function(){
+			zBPreOpen('#test-submit');
+		});
+		
+		it('should fire a preClose fn when defined', function(){
+			zBPreClose('#test-submit');
+		});
+		
+		it('should grow from a specified tag\'s attribute value', function(){
+			zBGrowFrom('#test-submit', 'zB');
+		});
+		
+	});
+});

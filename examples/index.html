@@ -2,181 +2,139 @@
 
 <html lang="en" class="no-js">
 <head>
-  <title>jQuery Zoombox Examples</title>
-  
-  <!-- Meta -->
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="title" content="Legwork Modal Examples" />
-  <meta name="copyright" content="Copyright © Legwork Studio. All Rights Reserved." />
-  <meta name="author" content="Legwork Studio (http://www.legworkstudio.com)" />
-  <meta name="robots" content="index, follow" />
-  
-  <link rel="shortcut icon" href="favicon.ico" />
-  
-  <!-- Whatever you do, do it with style -->
-  <link rel="stylesheet" href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
-  <link rel="stylesheet" href="css/main.css" />
-  
-  <!-- Keep it modern -->
-  <script type="text/javascript" src="js/modernizr.js"></script>
+	<title>jQuery Zoombox Examples</title>
+
+	<!-- Meta -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="title" content="Legwork jQuery Zoombox Examples" />
+	<meta name="copyright" content="Copyright © Legwork Studio. All Rights Reserved." />
+	<meta name="author" content="Legwork Studio (http://www.legworkstudio.com)" />
+	<meta name="robots" content="index, follow" />
+
+	<link rel="shortcut icon" href="http://www.legworkstudio.com/favicon.ico" />
+
+	<!-- Whatever you do, do it with style -->
+	<link rel="stylesheet" href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
+	<link rel="stylesheet" href="css/main.css" />
+
+	<!-- Keep it modern -->
+	<script type="text/javascript" src="js/modernizr.js"></script>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../jquery.zoombox.js"></script>
+	<script type="text/javascript" src="js/examples.js"></script>
 </head>
 
 <body>
-  <div id="wrapper">
-      <h1>Do It Live! Zoombox</h1>
+	<div id="wrapper">
+		<h1>Zoombox Examples</h1>
 
-      <h2>Properties</h2>
-      
-      <code>
-      // defaults<br/>
-      {<br/>
-      &nbsp;&nbsp;containerId:                "zoombox-container",<br/>
-      &nbsp;&nbsp;containerCloseId:           "zoombox-close",<br/>
-      &nbsp;&nbsp;containerCSSMap:            {<br/>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;opacity: '0',<br/>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width: '1px',<br/>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height: '1px',<br/> 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;position: 'absolute'},<br/>
-      &nbsp;&nbsp;containerParent:            'body',<br/>
-      &nbsp;&nbsp;closeWhenEsc:               true,<br/>
-      &nbsp;&nbsp;closeWhenSelfIsNotClicked:  true,<br/>
-      &nbsp;&nbsp;closeCallback:              null,<br/>
-      &nbsp;&nbsp;growFromMouse:              false,<br/>
-      &nbsp;&nbsp;growFromTagAttr:            false,<br/>
-      &nbsp;&nbsp;growTagAttr:                undefined,<br/>
-      &nbsp;&nbsp;openCallback:               null,<br/>
-      &nbsp;&nbsp;targetHeight:               '200',<br/>
-      &nbsp;&nbsp;targetWidth:                '400',<br/>
-      &nbsp;&nbsp;targetPosX:                 undefined,<br/>
-      &nbsp;&nbsp;targetPosY:                 undefined,<br/>
-      &nbsp;&nbsp;zoomboxEasing:              'swing',<br/>
-      &nbsp;&nbsp;zoomboxAnimationSpeed:      'fast'<br/>
-      }
-      </code>
-      
-      <p>
-        <b>containerId:String = "id-of-zoombox"<br/>
-        default = "zoombox-container"</b><br/><br/>
-        ID to be used for Zoombox container.
-      </p>
-      
-      <p>
-        <b>containerCloseId:String = "id-of-zoombox-close-anchor"<br/>
-        default = "zoombox-close"</b><br/><br/>
-        ID to be used for the Zoombox close anchor tag. Typically it makes for good UI to have one of these, but you may also set this to <b>null</b> if you do not want the default close anchor tag to be shown.
-      </p>
-      
-      <p>
-        <b>containerCSSMap:Object = {any: 'CSS', that: 'you', want: 'applied' }<br/>
-        default = {opacity: '0', width: '1px', height: '1px', position: 'absolute'}</b><br/><br/>
-        The initial CSS Map to be applied to the Zoombox container Pre-Zooming.
-      </p>
-      
-      <p>
-        <b>containerParent:String = "parent-item-of-the-zoombox"<br/>
-        default = "body"</b><br/><br/>
-        With the Zoombox having absolute positioning to achieve it's 'zoom' effect, the parent item becomes an important var to be able to customize. If you would like the to place the zoombox-container div anywhere other than as an immediate child of the body tag, specify so here.</p>
-      
-      <p>
-        <b>closeWhenEsc:Boolean <br/>
-        default = true</b><br/><br/>
-        Determines whether the Zoombox should close when ESC is pressed.
-      </p>
-      
-      <p>
-        <b>closeWhenSelfIsNotClicked:Boolean <br/>
-        default = true</b><br/><br/>
-        Determines whether the Zoombox should close when a DOM item that is not itself OR a child of itself is clicked.
-      </p>
-      
-      <p>
-        <b>closeCallback:Function<br/>
-        default = null</b><br/><br/>
-        Optional callback fn that will be fired after zoombox-container div close animation.
-      </p>
-      
-      <p>
-        <b>growFromMouse:Boolean <br/>
-        default = false</b><br/><br/>
-        If set to true, the zoombox-container div will have its initial (pre-zoomed) position set to mouse position at time of click.
-      </p>
+		<h2>1. Basic Usage</h2>
+		<code>
+		$('#example-1').zoombox();
+		</code>
+		<p><a id="example-1" href="javascript:void()">Example 1</a></p>
 
-      <p>
-        <b>growFromTagAttr:Boolean <br/>
-        default = false</b><br/><br/>
-        If set to true, zoombox-container div will have its initial (pre-zoomed) position set from proprietary x/y coordinates set by e.currentTarget's attr. Use growTagAttr(below) to define the attr which holds these x/y coodinates.
-      </p>
+		<h2>2. Adding content Pre zoombox opening</h2>
+		<code>
+		$('#example-2').zoombox({<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;preOpen: function(e){<br/>    		
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zoomboxTarget')).append('&#60;p&#62;Some Content here&#60;/p&#62;');<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;}<br/>   
+		});
+		</code>
+		<p><a id="example-2" href="javascript:void()">Example 2</a></p>
 
-      <p>
-        <b>growTagAttr:String = "tag_attr"<br/>
-        default = undefined</b><br/><br/>
-        If growFromTagAttr(above) is set to true, set growTagAttr to the attr which holds you x & y values.
-      </p>
+		<h2>3. Manipulating content Post zoombox opening</h2>
+		<code>
+		$('#example-3').zoombox({<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;preOpen: function(e){<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zoomboxTarget')).append('&#60;p style="display:none;"&#62;I was hidden but now i\'m visible&#60;/p&#62;');<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;},<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;openCallback: function(e){<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zoomboxTarget')).find('p').fadeIn();<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;}<br/> 
+		});
+		</code>
+		<p><a id="example-3" href="javascript:void()">Example 3</a></p>
 
-      <p>
-        <b>openCallback:Function<br/>
-        default = null</b><br/><br/>
-        Optional callback fn that will be fired after zoombox-container div open animation.
-      </p>
-
-      <p>
-        <b>targetHeight:String = 'the target height zoombox-container div'<br/>
-        default = '200'</b><br/><br/>
-        This is the final height (currently in pixels) that the zoombox-container will animate to
-      </p>
-
-      <p>
-        <b>targetWidth:String = 'the target width zoombox-container div'<br/>
-        default = '400'</b><br/><br/>
-        This is the final width (currently in pixels) that the zoombox-container will animate to
-      </p>
-
-      <p>
-        <b>targetPosX:Number = 'the target X Coodinate'<br/>
-        default = undefined</b><br/><br/>
-        This is the target x coordinate (currently in pixels) that the zoombox-container will animate to relative to containerParent
-      </p>
-
-      <p>
-        <b>targetPosY:Number = 'the target Y Coodinate'<br/>
-        default = undefined</b><br/><br/>
-        This is the target y coordinate (currently in pixels) that the zoombox-container will animate to relative to containerParent
-      </p>
-
-      <p>
-        <b>zoomboxEasing:String = 'Easing Function Name'<br/>
-        default = 'swing'</b><br/><br/>
-        Easing function to be applied to both zoomOpen and zoomClose animations
-      </p>
-
-      <p>
-        <b>zoomboxAnimationSpeed:String or Number = 'num in milliseconds or jQuery shorthand'<br/>
-        default = 'fast'</b><br/><br/>
-        The duration to be applied to both zoomOpen and zoomClose animations
-      </p>
-	
-	<h2>Methods</h2>
-	
-	<p>
-      <b>$('sel').zoombox(settings:Object);</b><br/><br/>
-      Initializes zoombox on the selected element(s) with the passed settings
-    </p>
-
-	<p>
-      <b>$('sel').zoombox('open', 'targetsel');</b><br/><br/>
-      Opens a zoombox that has been previously initialized with a simulated 'click' from 'targetsel'.
-    </p>
-
-	<p>
-      <b>$('sel').zoombox('close');</b><br/><br/>
-      Closes a zoombox that has been previously initialized.
-    </p>
-
-	<p>
-      <b>$('sel').zoombox('destroy');</b><br/><br/>
-      Removes all zoombox elements for selected item(s) from the DOM and returns non-dynamic items to their original state.
-    </p>
-
-  </div>
+		<h2>4. Pre zoombox close Fn</h2>
+		<code>
+		$('#example-4').zoombox({<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;preOpen: function(e){<br/> 
+				$($(e.currentTarget).data('zoomboxTarget')).append('&#60;p style="display:none;"&#62;I was lost but now i\'m found, and then i\'ll be lost again&#60;/p&#62;');<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;},<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;openCallback: function(e){<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zoomboxTarget')).find('p').fadeIn();<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;},<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;preClose: function(){<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$('.zoombox-container').find('p').remove();<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;}<br/> 
+		});
+		</code>
+		<p class="note">Note: 'preClose' and 'closeCallback' functions DO NOT have access to the event object. This is due to the fact that multiple events can close zoomboxes.</p>
+		<p><a id="example-4" href="javascript:void()">Example 4</a></p>
+		
+		<h2>5. Basic Usage</h2>
+		<code>
+		$('#example-5').zoombox({<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;closeCallback: function(){<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alert('close callback fn fired');<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+		});
+		</code>
+		<p class="note">Note: 'preClose' and 'closeCallback' functions DO NOT have access to the event object. This is due to the fact that multiple events can close zoomboxes.</p>
+		<p><a id="example-5" href="javascript:void()">Example 5</a></p>
+		
+		<h2>6. Customizing zoombox size</h2>
+		<code>
+		$('#example-6').zoombox({<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;targetWidth: '100',<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;targetHeight: '400'<br/>
+		});
+		</code>
+		<p class="note">Note: 'targetWidth' and 'targetHeight' are in pixels.</p>
+		<p><a id="example-6" href="javascript:void()">Example 6</a></p>
+		
+		<div id="ex-7-offset-parent" style="position: relative;">
+			<h2>7. Customizing zoombox position</h2>
+			<code>
+			$('#example-7').zoombox({<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;targetPosX: '300',<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;targetPosY: '0',<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;containerParent: '#ex-7-offset-parent'<br/>
+			});
+			</code>
+			<p class="note">Note: 'targetPosX' and 'targetPosY' are in pixels relative to the container's parent.</p>
+			<p class="note">Note: 'containerParent' will default to $(body), here we have wrapped this example in a &#60;div&#62; to act as our offset parent.</p>
+			<p><a id="example-7" href="javascript:void()">Example 7</a></p>
+		</div>
+		
+		<h2>8. Growing from the mouse click</h2>
+		<code>
+		$('#example-8').zoombox({<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;growFromMouse: true<br/>
+		});<br/>
+		</code>
+		<p><a id="example-8" href="javascript:void()">Example 8 - click (and close) multiple times on this link to see where the 'grow' points originate.</a></p>
+		
+		<div id="ex-9-offset-parent" style="position: relative;">
+			<h2>9. Customizing zoombox position using tag attributes</h2>
+			<code>
+			$('#ex-9-offset-parent a').zoombox({<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;growTagAttr: 'rel',<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;containerParent: '#ex-9-offset-parent'<br/>
+			});
+			</code>
+			<p class="note">Note: the tag attribute passed by 'growTagAttr' should be in 'xCoordinate, yCoordinate' format.</p>
+			
+			<p>
+				<a href="javascript:void()" rel="0, 32">Example 9 - One</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void()" rel="840, 32">Example 9 - Two</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void()" rel="0, 137">Example 9 - Three</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void()" rel="840, 137">Example 9 - Four</a>
+			</p>
+		</div>
+	</div>
 </body>
 </html>

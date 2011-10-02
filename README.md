@@ -1,5 +1,11 @@
-README.md
+##jQuery Zoombox
 
-##jQuery Zoombox has MOVED!!
+Zoombox is a flexible, half-modal, half-tooltip plugin.
 
-This Plugin is being actively maintained and developed under the umbrella of Legwork studio. You can find the repo here https://github.com/legworkstudio/jquery-zoombox.
+Out-of-the-box it does very little and relies on the client-coder to do most of the lifting. Like many things in life, you get what you give.
+
+If you are using zoombox and have a feature request or bug report, please file it at the [Issue queue](https://github.com/legworkstudio/jquery-zoombox/issues).
+
+For usage examples grab the code and navigate to /examples/index.html.
+
+Checkout the [Wiki](https://github.com/legworkstudio/jquery-zoombox/wiki) for more.
