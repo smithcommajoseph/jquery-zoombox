@@ -1,0 +1,54 @@
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+#wrapper {
+	width:800px;
+	padding: 20px 0;
+	margin: 0 auto;
+}
+
+h1 {
+	font: bold 24px/24px Helvetica, Arial, sans-serif;
+	color: #333;
+	margin: 0 0 40px;
+}
+
+h2 {
+	font: bold 16px/16px Helvetica, Arial, sans-serif;
+	color: #666;
+	margin: 0 0 16px;
+}
+
+code {
+	display: block;
+	width: 800px;
+	padding: 20px;
+	margin-bottom: 20px;
+	background-color: #eee;
+	border: 1px solid #ccc;
+}
+
+p {
+	font: normal 12px/16px Helvetica, Arial, sans-serif;
+	margin-bottom: 40px;
+	color: #999;
+}
+p.note{ margin-bottom:20px;}
+.zoombox-container {
+  background-color:#666;
+}
+.zoombox-container a.zoombox-close{
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: transparent url('../imgs/close_btn.png') no-repeat; 
+  float: right;
+}
+.zoombox-container a.zoombox-close:hover{
+	cursor:pointer;
+}
+.zoombox-container p{
+	color: #fff;
+}

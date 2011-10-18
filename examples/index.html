@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html lang="en" class="no-js">
+<head>
+	<title>jQuery Zoombox Examples</title>
+
+	<!-- Meta -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="title" content="Legwork jQuery Zoombox Examples" />
+	<meta name="copyright" content="Copyright © Legwork Studio. All Rights Reserved." />
+	<meta name="author" content="Legwork Studio (http://www.legworkstudio.com)" />
+	<meta name="robots" content="index, follow" />
+
+	<link rel="shortcut icon" href="http://www.legworkstudio.com/favicon.ico" />
+
+	<!-- Whatever you do, do it with style -->
+	<link rel="stylesheet" href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
+	<link rel="stylesheet" href="css/main.css" />
+
+	<!-- Keep it modern -->
+	<script type="text/javascript" src="js/modernizr.js"></script>
+</head>
+
+<body>
+	<div id="wrapper">
+		<h1>Zoombox Examples</h1>
+
+		<h2>1. Basic Usage</h2>
+		<code>
+		$('#example-1').zoombox();
+		</code>
+		<p><a id="example-1" href="javascript:void()">Example 1</a></p>
+
+		<h2>2. Adding content Pre zoombox opening</h2>
+		<code>
+		$('#example-2').zoombox({<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;preOpen: function(e){<br/>    		
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zoomboxTarget')).append('&#60;p&#62;Some Content here&#60;/p&#62;');<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;}<br/>   
+		});
+		</code>
+		<p><a id="example-2" href="javascript:void()">Example 2</a></p>
+
+		<h2>3. Manipulating content Post zoombox opening</h2>
+		<code>
+		$('#example-3').zoombox({<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;preOpen: function(e){<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zoomboxTarget')).append('&#60;p style="display:none;"&#62;I was hidden but now i\'m visible&#60;/p&#62;');<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;},<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;openCallback: function(e){<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zoomboxTarget')).find('p').fadeIn();<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;}<br/> 
+		});
+		</code>
+		<p><a id="example-3" href="javascript:void()">Example 3</a></p>
+
+		<h2>4. Pre zoombox close Fn</h2>
+		<code>
+		$('#example-4').zoombox({<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;preOpen: function(e){<br/> 
+				$($(e.currentTarget).data('zoomboxTarget')).append('&#60;p style="display:none;"&#62;I was lost but now i\'m found, and then i\'ll be lost again&#60;/p&#62;');<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;},<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;openCallback: function(e){<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zoomboxTarget')).find('p').fadeIn();<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;},<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;preClose: function(){<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$('.zoombox-container').find('p').remove();<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;}<br/> 
+		});
+		</code>
+		<p class="note">Note: 'preClose' and 'closeCallback' functions DO NOT have access to the event object. This is due to the fact that multiple events can close zoomboxes.</p>
+		<p><a id="example-4" href="javascript:void()">Example 4</a></p>
+		
+		<h2>5. Basic Usage</h2>
+		<code>
+		$('#example-5').zoombox({<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;closeCallback: function(){<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alert('close callback fn fired');<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+		});
+		</code>
+		<p class="note">Note: 'preClose' and 'closeCallback' functions DO NOT have access to the event object. This is due to the fact that multiple events can close zoomboxes.</p>
+		<p><a id="example-5" href="javascript:void()">Example 5</a></p>
+		
+		<h2>6. Customizing zoombox size</h2>
+		<code>
+		$('#example-6').zoombox({<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;targetWidth: '100',<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;targetHeight: '400'<br/>
+		});
+		</code>
+		<p class="note">Note: 'targetWidth' and 'targetHeight' are in pixels.</p>
+		<p><a id="example-6" href="javascript:void()">Example 6</a></p>
+		
+		<div id="ex-7-offset-parent" style="position: relative;">
+			<h2>7. Customizing zoombox position</h2>
+			<code>
+			$('#example-7').zoombox({<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;targetPosX: '300',<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;targetPosY: '0',<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;containerParent: '#ex-7-offset-parent'<br/>
+			});
+			</code>
+			<p class="note">Note: 'targetPosX' and 'targetPosY' are in pixels relative to the container's parent.</p>
+			<p class="note">Note: 'containerParent' will default to $(body), here we have wrapped this example in a &#60;div&#62; to act as our offset parent.</p>
+			<p><a id="example-7" href="javascript:void()">Example 7</a></p>
+		</div>
+		
+		<h2>8. Growing from the mouse click</h2>
+		<code>
+		$('#example-8').zoombox({<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;growFromMouse: true<br/>
+		});<br/>
+		</code>
+		<p><a id="example-8" href="javascript:void()">Example 8 - click (and close) multiple times on this link to see where the 'grow' points originate.</a></p>
+		
+		<div id="ex-9-offset-parent" style="position: relative;">
+			<h2>9. Customizing zoombox position using tag attributes</h2>
+			<code>
+			$('#ex-9-offset-parent a').zoombox({<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;growTagAttr: 'rel',<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;containerParent: '#ex-9-offset-parent'<br/>
+			});
+			</code>
+			<p class="note">Note: the tag attribute passed by 'growTagAttr' should be in 'xCoordinate, yCoordinate' format.</p>
+			
+			<p>
+				<a href="javascript:void()" rel="0, 32">Example 9 - One</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void()" rel="840, 32">Example 9 - Two</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void()" rel="0, 137">Example 9 - Three</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void()" rel="840, 137">Example 9 - Four</a>
+			</p>
+		</div>
+	</div>
+	
+	
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://raw.github.com/technicolorenvy/jquery-zoombox/master/jquery.zoombox.js"></script>
+	<script type="text/javascript" src="js/examples.js"></script>
+</body>
+</html>
