@@ -66,8 +66,8 @@ table {
 html {
   width: 100%;
   background-image: -webkit-gradient(radial, 50% 1%, 0, 50% 1%, 800, color-stop(0%, #888), color-stop(100%, #383735));
-  background-image: -moz-radial-gradient(top center, circle, #E8C95A 0%, #B2720D 800px);
-  background-image: radial-gradient(top center, circle, #E8C95A 0%, #B2720D 800px);
+  background-image: -moz-radial-gradient(top center, circle, #888 0%, #383735 800px);
+  background-image: radial-gradient(top center, circle, #888 0%, #383735 800px);
   padding-top: 10px;
   font-family: Helvetica, sans-serif;
 }
