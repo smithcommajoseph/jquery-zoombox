@@ -102,6 +102,7 @@ html {
 #jie-main {	
 	display: block;
 	background-color: rgba(255, 255, 255, 0.9);
+	position: relative;
 	
 	-moz-box-shadow: #102b38 0 0 10px 0;
 	-webkit-box-shadow: #102b38 0 0 10px 0;
@@ -236,51 +237,35 @@ code{
 	padding-right: 5px; 
 	padding-left: 5px;
 }
+strong{ font-weight: bold; }
 
-/*Collection shiz*/
+/*zb shiz*/
 .grey-back{
 	background-color: #ddd;
 }
 .hidden{
 	display: none !important;
 }
-.collection-wrapper{
+
+.zoombox-container {
+	background-color: #E1E7E8;
+	border: 1px solid #cad0d0;
+}
+.zoombox-close{
+	background: transparent url(../examples/imgs/close_btn.png) no-repeat;
 	display: block;
-	width: 736px;
-	float:left;
-	margin: 20px 0 30px 0;
-	position: relative;
+	float: right;
+	height: 20px;
+	width: 20px;
+	border: 0;
+}
+.zoombox-close:hover{
+	cursor: pointer;
 }
 
-.collection-wrapper img{
-	display:block;
-	float:left;
-	margin:2px
-}
-
-#orange-collection.collection-wrapper,
-#green-collection.collection-wrapper{
-	height: 368px;
-}
-#grey-collection.collection-wrapper{
-	height: 552px;
-}
-#sienna-collection.collection-wrapper{
-	height: 1656px;
-}
-.spins{
-	position:absolute;
-}
-#orange-collection .spins,
-#green-collection .spins{
-	top: 180px;
-	left: 375px;
-}
-#grey-collection #s1{
-	top: 150px;
-	left: 200px;
-}
-#grey-collection #s2{
-	bottom: 150px;
-	right: 200px;
+#pony-wrapper h4{
+	font-weight:bold;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	color: #1B2B32;
 }
