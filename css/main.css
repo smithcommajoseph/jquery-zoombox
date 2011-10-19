@@ -269,3 +269,28 @@ strong{ font-weight: bold; }
 	margin-top: 10px;
 	color: #1B2B32;
 }
+
+#map-container{
+	position: relative;
+	display: block;
+	width: 736px;
+	height: 350px;
+	background-color: #1B2B32;
+	
+		-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	-o-border-radius: 7px;
+	-ms-border-radius: 7px;
+	-khtml-border-radius: 7px;
+	border-radius: 7px;
+}
+.map-feature-link{
+	position: absolute;
+}
+#map-container a{
+	color: #ddd;
+	border: 0;
+	font-size: 13px;
+	line-height: 1.9em;
+	padding-left: 10px;
+}

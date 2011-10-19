@@ -55,17 +55,20 @@
 				</a>
 			</div>
 			<h2 id="mission">What is jQ Zoombox?</h2>
-			<p>Zoombox is a flexible, half-modal, half-tooltip plugin. It relies on the client-coder to do most of the heavy lifting. This ensures that you have the power to use <code>$.zoombox</code> as you like, not as you are forced.</p>
+			<p>Zoombox is a flexible, half-modal, half-tooltip plugin. Combined w/ canvas elements it works rather nicely for displaying info about interactive map points.</p>
+			<p>It relies on the client-coder to do most of the heavy lifting. This ensures that you have the power to use <code>$.zoombox</code> as you like, not as you are forced.</p>
 			
 			<h2 id="overview">Overview</h2>
 			<p>The strength in <code>$.zoombox</code> lies in that it does very, very little. Leaving / enabling you to write all the CSS and JS to make a rad experience.</p>
 			
-			<p>Translated, <code>$.zoombox</code> becomes yet another tool in the arsenal. See the <a href="#basic-usage">Basic Usage</a> section below or the in-depth <a href="examples/index.html" rel="">examples</a> to see if it's useful to you.</p>
+			<p>Translated, <code>$.zoombox</code> becomes yet another tool in the arsenal. See the <a href="#basic-usage">Usage</a> section below or the in-depth <a href="examples/index.html" rel="">examples</a> to see if it's useful to you.</p>
 			
 			
-			<h2 id="basic-usage">Basic Usage</h2>
+			<h2 id="basic-usage">Usage</h2>
 			<p>Let us say we have an anchor that when clicked, should open a modal type container with a predefined location.</p>
-	
+			
+			<div id="map-container"></div>
+			
 			<p><a href="javascript:void(0)" id="pony">Click me</a> to see <code>$.zoombox</code> in action.</p>
 	
 	
@@ -241,7 +244,9 @@
 	</a>
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-	<script type="text/javascript" src="https://raw.github.com/technicolorenvy/jquery-zoombox/master/jquery.zoombox.js"></script>
+	<!--[if IE]><script src="excanvas.js"></script><![endif]-->
+	<script type="text/javascript"
+	 src="https://raw.github.com/technicolorenvy/jquery-zoombox/master/jquery.zoombox.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
