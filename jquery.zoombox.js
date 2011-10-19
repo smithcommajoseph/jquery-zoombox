@@ -228,7 +228,7 @@
 		containerParent:	'body',
 		closeBtn: 			true,
 		closeWhenEsc:		true,
-		closeIfNotSelf:		true,
+		closeIfNotSelf:		false,
 		easing:				'swing',
 		growFromMouse:		false,
 		growTagAttr:		undefined,
