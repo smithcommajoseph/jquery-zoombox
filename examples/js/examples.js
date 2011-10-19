@@ -5,33 +5,33 @@
 		
 		$('#example-2').zoombox({
 			preOpen: function(e){
-				$($(e.currentTarget).data('zoomboxTarget')).append('<p>Some Content here</p>');
+				$($(e.currentTarget).data('zbxTarget')).append('<p>Some Content here</p>');
 			}
 		});
 		
 		$('#example-3').zoombox({
 			preOpen: function(e){
-				$($(e.currentTarget).data('zoomboxTarget')).append('<p style="display:none;">I was hidden but now i\'m visible</p>');
+				$($(e.currentTarget).data('zbxTarget')).append('<p style="display:none;">I was hidden but now i\'m visible</p>');
 			},
-			openCallback: function(e){
-				$($(e.currentTarget).data('zoomboxTarget')).find('p').fadeIn();
+			onOpened: function(e){
+				$($(e.currentTarget).data('zbxTarget')).find('p').fadeIn();
 			}
 		});
 		
 		$('#example-4').zoombox({
 			preOpen: function(e){
-				$($(e.currentTarget).data('zoomboxTarget')).append('<p style="display:none;">I was lost but now i\'m found, and then i\'ll be lost again</p>');
+				$($(e.currentTarget).data('zbxTarget')).append('<p style="display:none;">I was lost but now i\'m found, and then i\'ll be lost again</p>');
 			},
-			openCallback: function(e){
-				$($(e.currentTarget).data('zoomboxTarget')).find('p').fadeIn();
+			onOpened: function(e){
+				$($(e.currentTarget).data('zbxTarget')).find('p').fadeIn();
 			},
-			preClose: function(){
-				$('.zoombox-container').find('p').remove();
+			preClose: function(e){
+				$($(e.currentTarget).data('zbxTarget')).find('p').remove();
 			}
 		});
 		
 		$('#example-5').zoombox({
-			closeCallback: function(){
+			onClosed: function(e){
 				alert('close callback fn fired');
 			}
 		});

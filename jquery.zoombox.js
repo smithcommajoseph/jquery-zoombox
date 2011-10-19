@@ -1,5 +1,5 @@
 /*!
-	* Copyright © 2011 Legwork. All Rights Reserved.
+	* jQuery Zoombox: https://github.com/technicolorenvy/jquery-zoombox
 	*
 	* Dependencies:
 	* jQuery 1.4+ (jquery.com)
@@ -10,45 +10,52 @@
 	
 	var ver = '1.2',
 		
+		ID_PRE = "#zoombox-container",
+		TRIG_CLASS = "zoombox-trigger",
+		CONT_CLASS = "zoombox-container",
+		CONT_CLOSER = "zoombox-close",
+		E_SPACE = ".zbxEvents",
+		OPTS = 'zbxOptions',
+		STATE = 'zbxState',
+		TARGET = 'zbxTarget',
+		CALCS = 'zoomboxCalcs';
+		
 	methods = {
 		init: function(options){
 			return this.each(function(){
 				var $trigger = $(this),
 					params = $.extend({}, $.fn.zoombox.defaults, options);
 					
-				$trigger.data('zoomboxOptions', params)
-						.data('zoomboxState', 'closed')
-						.data('zoomboxTarget', params.containerIdPre+'-'+Math.floor(Math.random()*10000)+Math.floor(Math.random()*100));
+				$trigger
+					.addClass(TRIG_CLASS)
+					.data(OPTS, params)
+					.data(STATE, 0)
+					.data(TARGET, ID_PRE+'-'+Math.floor(Math.random()*10000)+Math.floor(Math.random()*100));
 				
 				_binds(params, $trigger);
-				
 			});
 		},
-		open: function(selector){
-			$(selector).click();
+		open: function(){
+			return this.each(function(){
+				var $trigger = $(this);
+				if($trigger.data(STATE) !== 1){ $trigger.click(); }
+			});
 		},
 		close: function(){
-			return this.each(function(index){
-				var $trigger = $(this),
-					params = {};
-					
-				if(index === 0){
-					params = $trigger.data('zoomboxOptions');
-					
-					_zoomClose($trigger);
-				}
+			return this.each(function(){
+				var $trigger = $(this);
+				if($trigger.data(STATE) !== 0){ $trigger.click(); }
 			});
 		},
-		
 		destroy: function(){
-			var $zbContainer = arguments[1] ? $(arguments[1]) : $($.fn.zoombox.defaults.containerIdPre);
+			var $zbContainer = arguments[1] ? $(arguments[1]) : $(ID_PRE);
 			return this.each(function(index){
 				var $trigger = $(this),
-					params = $trigger.data('zoomboxOptions');
+					params = $trigger.data(OPTS);
 					
 				if(index === 0){
-					_unBinds($trigger, params);
-					$trigger.data('zoomboxOptions', {});
+					_unBinds($trigger);
+					$trigger.removeClass(TRIG_CLASS).data(OPTS, {});
 					$zbContainer.remove();
 				}
 			});
@@ -57,111 +64,102 @@
 	
 	function _binds(params, $trigger){
 		
-		$trigger.bind('click.zoomboxEvents', function(e){
+		$trigger.bind('click'+E_SPACE, function(e){
 			e.preventDefault();
-			if($trigger.data('zoomboxState') == 'closed'){
+			if($trigger.data(STATE) === 0){
 				_zoomOpen($trigger, e);
 			} else {
-				_zoomClose($trigger);
+				_zoomClose($trigger, e);
 			}
 		});
 		
-		if(params.containerCloseClass !== null){
-			$($trigger.data('zoomboxTarget')+' '+params.containerCloseClass).live('click.zoomboxEvents', function(e){
+		if(params.closeBtn === true){
+			$($trigger.data(TARGET)+' .'+CONT_CLOSER).live('click'+E_SPACE, function(e){
 				e.preventDefault();
-				
-				_zoomClose($trigger);
+				if($trigger.data(STATE) !== 0){ $trigger.click(); }	
 			});
 		}
 		
 		if(params.closeWhenEsc === true){
-			$(window).bind('keyup.zoomboxEvent', function(e){
+			$(window).bind('keyup'+E_SPACE, function(e){
 				if(e.which == 27){
-					_zoomClose($trigger);
+					if($trigger.data(STATE) !== 0){ $trigger.click(); }
 				}
-			});
-		}
-		
-		if(params.closeWhenSelfIsNotClicked === true){
-			$(window).bind('click.zoomboxEvents', function(e){
-				var inZoombox = false,
-					parents = $(e.target).parents();
-				
-				for(var prop in parents){
-					if(parents[prop] === $($trigger.data('zoomboxTarget'))[0]) { inZoombox = true; }
-				}
-				if(inZoombox === false){
-					_zoomClose($trigger);
-				} 
 			});
 		}
 	}
 	
-	function _unBinds($trigger, params){
-		$trigger.unbind('.zoomboxEvents');
-		$(params.containerCloseClass).unbind('.zoomboxEvents');
-		$(window).unbind('.zoomboxEvents');
+	function _winBind(e){
+		$(window).unbind('click'+E_SPACE, _winBind);
+		
+		$('.'+TRIG_CLASS).each(function(){
+			if($(this).data(STATE) === 1){ $(this).click(); }
+		});
+	}
+	
+	function _unBinds($trigger){
+		$trigger.unbind(E_SPACE);
+		$('.'+CONT_CLOSER).unbind(E_SPACE);
+		$(window).unbind(E_SPACE);
 	}
 	
 	function _zoomOpen($trigger, e){
-		if($trigger.data('zoomboxState') == 'closed'){
-			var params = $trigger.data('zoomboxOptions'),
-				zoomcalcs = _returnZoomcalcs(params, $trigger, e),
-				$container = $('<div/>').attr('id', _deClassify($trigger.data('zoomboxTarget')))
-										.attr('class', _deClassify(params.containerClass))
+		if($trigger.data(STATE) === 0){
+			$trigger.data(STATE, 1);
+			
+			var params = $trigger.data(OPTS),
+				calcs = _returnZoomcalcs(params, $trigger, e),
+				$container = $('<div/>').attr('id', _deClassify($trigger.data(TARGET)))
+										.attr('class', CONT_CLASS)
 										.css(params.containerCSSMap);
-			function _animate(){
-			    $($trigger.data('zoomboxTarget'))
-							.css('opacity', '1')
-							.animate(zoomcalcs.animapGrow, 
-								params.zoomboxAnimationSpeed, 
-								params.zoomboxEasing, 
-								function(){
-					    			$trigger.data('zoomboxState', 'open');
-									if(params.containerCloseClass !== null) { 
-										$($trigger.data('zoomboxTarget')+' '+params.containerCloseClass).fadeIn(); 
-									}
-									if(params.openCallback !== null) { params.openCallback(e); }
-								});
-			}
-										
-			if(params.containerCloseClass !== null) {
-				$container.append('<a class="'+_deClassify(params.containerCloseClass)+'" style="display: none;"/>');
+			
+			if(params.closeBtn === true) {
+				$container.append('<a class="'+CONT_CLOSER+'" style="display: none;"/>');
 			}
 			
 			$(params.containerParent).append($container);
-			$($trigger.data('zoomboxTarget')).css(zoomcalcs.startmap);
+			$($trigger.data(TARGET)).css(calcs.startmap);
 
 			if(params.preOpen != null){ params.preOpen(e); }
 			
-			_animate();
+			$($trigger.data(TARGET))
+				.css('opacity', '1')
+				.animate(calcs.animapGrow, 
+					params.speed, 
+					params.easing, 
+					function(){
+						if(params.closeBtn === true) { $($trigger.data(TARGET)+' .'+CONT_CLOSER).fadeIn(); }
+						if(params.closeIfNotSelf === true){ $(window).bind('click'+E_SPACE, _winBind); }
+						if(params.onOpened !== null) { params.onOpened(e); }
+					});
 		}
 	}
 	
-	function _zoomClose($trigger){
-		if($trigger.data('zoomboxState') == 'open'){
-			var params = $trigger.data('zoomboxOptions'),
-				zoomcalcs = _returnZoomcalcs(params, $trigger);
+	function _zoomClose($trigger, e){
+		if($trigger.data(STATE) === 1){
+			$trigger.data(STATE, 0);
+			
+			var params = $trigger.data(OPTS),
+				calcs = _returnZoomcalcs(params, $trigger);
 			
 			function _animate(){
-				$($trigger.data('zoomboxTarget')).animate(zoomcalcs.animapShrink, 
-											params.zoomboxAnimationSpeed, 
-											params.zoomboxEasing, 
-											function(){
-								    			$trigger.data('zoomboxState', 'closed');
-												$($trigger.data('zoomboxTarget')).remove();
-												$trigger.removeData('zoomcalcs');
-												if(params.closeCallback !== null) { params.closeCallback(); }
-											});
+				if(params.preClose != null){ params.preClose(e); }
+				$($trigger.data(TARGET))
+					.animate(calcs.animapShrink, 
+						params.speed, 
+						params.easing, 
+						function(){
+							$($trigger.data(TARGET)).remove();
+							$trigger.removeData(CALCS);
+							if(params.onClosed !== null) { params.onClosed(e); }
+						});
 			}	
 				
-			if(params.containerCloseClass !== null) {
-				$($trigger.data('zoomboxTarget')+' '+params.containerCloseClass).fadeOut('fast', function(){
-					if(params.preClose != null){ params.preClose(); }
+			if(params.closeBtn === true) {
+				$($trigger.data(TARGET)+' .'+CONT_CLOSER).fadeOut('fast', function(){
 					_animate();
 				});
 			} else {
-	 			if(params.preClose != null){ params.preClose(); }
 				_animate();
 			}
 		}
@@ -170,18 +168,16 @@
 	
 	function _returnZoomcalcs(params, $trigger){
 		var origin = {},
-			zoomcalcs = {},
+			calcs = {},
 			animapLeft,
 			animapTop,
 			e = (arguments[2] !== undefined) ? arguments[2] : undefined;
 			
-		if($trigger.data('zoomcalcs') === undefined) {
+		if($trigger.data(CALCS) === undefined) {
 			
 			if(params.growFromMouse === true) { origin.x = e.pageX; origin.y = e.pageY; }
 			else if (params.growTagAttr !== undefined){
-				var attrTxt = $(e.currentTarget).attr(params.growTagAttr);
-				var attrArr = attrTxt.split(', ');
-				
+				var attrArr = $(e.currentTarget).attr(params.growTagAttr).split(', ');
 				origin.x = attrArr[0]; 
 				origin.y = attrArr[1];
 			} 
@@ -194,17 +190,17 @@
 			animapLeft = (params.targetPosX !== undefined) ? params.targetPosX : origin.x - parseInt(params.targetWidth / 2, 10);
 			animapTop = (params.targetPosY !== undefined) ? params.targetPosY : origin.y - parseInt(params.targetHeight / 2, 10);
 			
-			zoomcalcs.startmap = {left: origin.x+'px', top: origin.y+'px'};
-			zoomcalcs.animapGrow = {left: animapLeft+'px', width: params.targetWidth, top: animapTop+'px', height: params.targetHeight};
-			zoomcalcs.animapShrink = {left: origin.x+'px', width: '1px', top: origin.y+'px', height: '1px'};
+			calcs.startmap = {left: origin.x+'px', top: origin.y+'px'};
+			calcs.animapGrow = {left: animapLeft+'px', width: params.targetWidth, top: animapTop+'px', height: params.targetHeight};
+			calcs.animapShrink = {left: origin.x+'px', width: '1px', top: origin.y+'px', height: '1px'};
 			
-			$trigger.data('zoomcalcs', zoomcalcs);
+			$trigger.data(CALCS, calcs);
 			
 		} else {
-			zoomcalcs = $trigger.data('zoomcalcs');
+			calcs = $trigger.data(CALCS);
 		}
 		
-		return zoomcalcs;
+		return calcs;
 	}
 	
 	function _deClassify(str){
@@ -228,25 +224,23 @@
 	$.fn.zoombox.ver = function() { return ver; };
 	
 	$.fn.zoombox.defaults = {
-		containerIdPre:				"#zoombox-container",
-		containerClass: 			".zoombox-container",
-		containerCloseClass:		".zoombox-close",
-		containerCSSMap:			{opacity: '0', width: '1px', height: '1px', position: 'absolute'},
-		containerParent:			'body',
-		closeWhenEsc:				true,
-		closeWhenSelfIsNotClicked:	true,
-		closeCallback:				null,
-		growFromMouse:				false,
-		growTagAttr:				undefined,
-		openCallback:				null,
-		preOpen: 					null,
-		preClose: 					null,
-		targetHeight:				'200',
-		targetWidth:				'200',
-		targetPosX: 				undefined,
-		targetPosY: 				undefined,
-		zoomboxEasing:				'swing',
-		zoomboxAnimationSpeed:		'fast'
+		containerCSSMap:	{opacity: '0', width: '1px', height: '1px', position: 'absolute'},
+		containerParent:	'body',
+		closeBtn: 			true,
+		closeWhenEsc:		true,
+		closeIfNotSelf:		true,
+		easing:				'swing',
+		growFromMouse:		false,
+		growTagAttr:		undefined,
+		onClosed:			null,
+		onOpened:			null,
+		preOpen: 			null,
+		preClose: 			null,
+		speed:				'fast',
+		targetHeight:		'200',
+		targetWidth:		'200',
+		targetPosX: 		undefined,
+		targetPosY: 		undefined
 	};
 
 })(jQuery);

@@ -39,7 +39,7 @@
 		<code>
 		$('#example-2').zoombox({<br/>
 		&nbsp;&nbsp;&nbsp;&nbsp;preOpen: function(e){<br/>    		
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zoomboxTarget')).append('&#60;p&#62;Some Content here&#60;/p&#62;');<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zbxTarget')).append('&#60;p&#62;Some Content here&#60;/p&#62;');<br/>
 		&nbsp;&nbsp;&nbsp;&nbsp;}<br/>   
 		});
 		</code>
@@ -49,10 +49,10 @@
 		<code>
 		$('#example-3').zoombox({<br/> 
 		&nbsp;&nbsp;&nbsp;&nbsp;preOpen: function(e){<br/> 
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zoomboxTarget')).append('&#60;p style="display:none;"&#62;I was hidden but now i\'m visible&#60;/p&#62;');<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zbxTarget')).append('&#60;p style="display:none;"&#62;I was hidden but now i\'m visible&#60;/p&#62;');<br/> 
 		&nbsp;&nbsp;&nbsp;&nbsp;},<br/> 
-		&nbsp;&nbsp;&nbsp;&nbsp;openCallback: function(e){<br/> 
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zoomboxTarget')).find('p').fadeIn();<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;onOpened: function(e){<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zbxTarget')).find('p').fadeIn();<br/> 
 		&nbsp;&nbsp;&nbsp;&nbsp;}<br/> 
 		});
 		</code>
@@ -62,28 +62,26 @@
 		<code>
 		$('#example-4').zoombox({<br/> 
 		&nbsp;&nbsp;&nbsp;&nbsp;preOpen: function(e){<br/> 
-				$($(e.currentTarget).data('zoomboxTarget')).append('&#60;p style="display:none;"&#62;I was lost but now i\'m found, and then i\'ll be lost again&#60;/p&#62;');<br/> 
+				$($(e.currentTarget).data('zbxTarget')).append('&#60;p style="display:none;"&#62;I was lost but now i\'m found, and then i\'ll be lost again&#60;/p&#62;');<br/> 
 		&nbsp;&nbsp;&nbsp;&nbsp;},<br/> 
-		&nbsp;&nbsp;&nbsp;&nbsp;openCallback: function(e){<br/> 
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zoomboxTarget')).find('p').fadeIn();<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;onOpened: function(e){<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zbxTarget')).find('p').fadeIn();<br/> 
 		&nbsp;&nbsp;&nbsp;&nbsp;},<br/> 
-		&nbsp;&nbsp;&nbsp;&nbsp;preClose: function(){<br/> 
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$('.zoombox-container').find('p').remove();<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;preClose: function(e){<br/> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$($(e.currentTarget).data('zbxTarget')).find('p').remove();<br/> 
 		&nbsp;&nbsp;&nbsp;&nbsp;}<br/> 
 		});
 		</code>
-		<p class="note">Note: 'preClose' and 'closeCallback' functions DO NOT have access to the event object. This is due to the fact that multiple events can close zoomboxes.</p>
 		<p><a id="example-4" href="javascript:void()">Example 4</a></p>
 		
 		<h2>5. Basic Usage</h2>
 		<code>
 		$('#example-5').zoombox({<br/>
-		&nbsp;&nbsp;&nbsp;&nbsp;closeCallback: function(){<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;onClosed: function(e){<br/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alert('close callback fn fired');<br/>
 		&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
 		});
 		</code>
-		<p class="note">Note: 'preClose' and 'closeCallback' functions DO NOT have access to the event object. This is due to the fact that multiple events can close zoomboxes.</p>
 		<p><a id="example-5" href="javascript:void()">Example 5</a></p>
 		
 		<h2>6. Customizing zoombox size</h2>

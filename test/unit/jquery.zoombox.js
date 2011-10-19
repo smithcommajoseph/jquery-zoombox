@@ -27,8 +27,8 @@ describe('Zoombox', function(){
 			t = 0;
 		
 		$(sel).zoombox({
-			openCallback: function(){
-				container = $(sel).data('zoomboxTarget');
+			onOpened: function(){
+				container = $(sel).data('zbxTarget');
 				t = 1;
 			}
 		});
@@ -53,11 +53,11 @@ describe('Zoombox', function(){
 			t = 0;
 		
 		$(sel).zoombox({
-			openCallback: function(){
-				container = $(sel).data('zoomboxTarget');
+			onOpened: function(){
+				container = $(sel).data('zbxTarget');
 				$(sel).click();
 			},
-			closeCallback: function(){
+			onClosed: function(){
 				t = 1;
 			}
 		});
@@ -78,10 +78,10 @@ describe('Zoombox', function(){
 		
 		$(sel).zoombox({
 			preOpen: function(){
-				container = $(sel).data('zoomboxTarget');
+				container = $(sel).data('zbxTarget');
 				$(container).append('<div id="test-div" />');
 			},
-			openCallback: function(){
+			onOpened: function(){
 				t = 1;
 			}
 		});
@@ -101,15 +101,15 @@ describe('Zoombox', function(){
 			t = 0;
 		
 		$(sel).zoombox({
-			openCallback: function(){
+			onOpened: function(){
 				$(sel).click();
-				container = $(sel).data('zoomboxTarget');
+				container = $(sel).data('zbxTarget');
 				
 			},
 			preClose: function(){
 				$(container).append('<div id="test-div" />');
 			},
-			closeCallback: function(){
+			onClosed: function(){
 				t = 1;
 			}
 		});
@@ -130,7 +130,7 @@ describe('Zoombox', function(){
 
 		$(sel).zoombox({
 			growTagAttr: attr,
-			openCallback: function(){
+			onOpened: function(){
 				zoomcalcs = $(sel).data('zoomcalcs');
 				t = 1;
 			}
@@ -175,10 +175,10 @@ describe('Zoombox', function(){
 			expect(typeof $.fn.zoombox.defaults.containerParent).toEqual('string');
 			expect(typeof $.fn.zoombox.defaults.closeWhenEsc).toEqual('boolean');
 			expect(typeof $.fn.zoombox.defaults.closeWhenSelfIsNotClicked).toEqual('boolean');
-			expect(typeof $.fn.zoombox.defaults.closeCallback).toEqual('object');
+			expect(typeof $.fn.zoombox.defaults.onClosed).toEqual('object');
 			expect(typeof $.fn.zoombox.defaults.growFromMouse).toEqual('boolean');
 			expect(typeof $.fn.zoombox.defaults.growTagAttr).toEqual('undefined');
-			expect(typeof $.fn.zoombox.defaults.openCallback).toEqual('object');
+			expect(typeof $.fn.zoombox.defaults.onOpened).toEqual('object');
 			expect(typeof $.fn.zoombox.defaults.preOpen).toEqual('object');
 			expect(typeof $.fn.zoombox.defaults.preClose).toEqual('object');
 			expect(typeof $.fn.zoombox.defaults.targetHeight).toEqual('string');
