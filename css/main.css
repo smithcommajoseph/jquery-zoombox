@@ -270,6 +270,7 @@ strong{ font-weight: bold; }
 	color: #1B2B32;
 }
 
+/*Sorry dudes, some messy CSS here, will cleanup at some point...*/
 #map-container{
 	position: relative;
 	display: block;
@@ -277,12 +278,25 @@ strong{ font-weight: bold; }
 	height: 350px;
 	background-color: #1B2B32;
 	
-		-moz-border-radius: 7px;
+	-moz-border-radius: 7px;
 	-webkit-border-radius: 7px;
 	-o-border-radius: 7px;
 	-ms-border-radius: 7px;
 	-khtml-border-radius: 7px;
 	border-radius: 7px;
+	padding-top: 0;
+}
+#map-container h3{
+	position:absolute;
+	color: #d1d1d1;
+	border: 0;
+	font-size: 20px;
+	padding-left: 10px;
+	background-color: rgba(34,34,34,0.75);
+	border: 1px solid rgba(255,255,255,0.25);
+	width: 50%;
+	font-weight: normal;
+	font-style: normal;
 }
 .map-feature-link{
 	position: absolute;
@@ -293,4 +307,26 @@ strong{ font-weight: bold; }
 	font-size: 13px;
 	line-height: 1.9em;
 	padding-left: 10px;
+}
+#map-container a:hover{
+	color: #9c53c9;
+}
+#map-container .zoombox-close{
+	background: transparent url(../examples/imgs/close_btn_greyed.png) no-repeat;
+	position: absolute;
+	left: 698px;
+	top: -2px;
+}
+#map-container .zoombox-container #zc-wrap{
+	padding: 20px;
+}
+#map-container .zoombox-container{
+	color:  #1B2B32;
+	opacity: 0.97 !important;
+}
+#map-container .zoombox-container h4{
+	font-size:20px;
+	font-weight:bold;
+	border-bottom: 3px solid #B22E2F;
+	padding-bottom:5px;
 }

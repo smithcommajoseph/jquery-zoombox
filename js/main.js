@@ -36,9 +36,8 @@ var Zb = Zb || {};
 						width: 75,
 						lineConnectX: 50, 
 						lineConnectY: 266,
-						target: "/json/dus/",
-						copy: "Wake up",
-						time: "5:30"
+						target: "up.js",
+						copy: "Wake up"
 				    },
 				    {
 						targetX: 123, 
@@ -48,9 +47,8 @@ var Zb = Zb || {};
 						width: 105,
 						lineConnectX: 153, 
 						lineConnectY: 226, 
-						target: "/json/usps/", 
-						copy: "Vespa to work",
-						time: "6:40"
+						target: "work.js", 
+						copy: "Vespa to work"
 				    },
 				    {
 						targetX: 246, 
@@ -60,9 +58,8 @@ var Zb = Zb || {};
 						width: 150,
 						lineConnectX: 300, 
 						lineConnectY: 186,
-						target: "/json/uspn/", 
-						copy: "Think hard about stuff",
-						time: "7:00"
+						target: "think1.js", 
+						copy: "Think hard about stuff"
 				    },
 				    {
 						targetX: 492, 
@@ -72,10 +69,8 @@ var Zb = Zb || {};
 						width: 130,
 						lineConnectX: 442, 
 						lineConnectY: 186, 
-						target: "/json/th/", 
-						copy: "Vespa back home",
-						time: "4:30"
-						
+						target: "home.js", 
+						copy: "Vespa back home"
 				    },
 				    {
 						targetX: 615, 
@@ -85,9 +80,8 @@ var Zb = Zb || {};
 						width: 150,
 						lineConnectX: 585, 
 						lineConnectY: 226, 
-						target: "/json/usps/", 
-						copy: "Think hard about Stuff",
-						time: "5:00"
+						target: "think2.js", 
+						copy: "Think hard about Stuff"
 				    },
 				    {
 						targetX: 736, 
@@ -97,9 +91,8 @@ var Zb = Zb || {};
 						width: 55,
 						lineConnectX: 690, 
 						lineConnectY: 266, 
-						target: "/json/th/", 
-						copy: "Sleep",
-						time: "9:00"
+						target: "down.js", 
+						copy: "Sleep"
 				    }
 				];
 			
@@ -113,43 +106,27 @@ var Zb = Zb || {};
 			$container.append(html.join(''));
 			
 			$('.map-feature-link').zoombox({
-				targetWidth: 870, 
-				targetHeight: 361, 
-				targetPosX: 56, 
-				targetPosY: 95, 
-				containerParent: '.neighborhood-map .active-content', 
-				zoomboxEasing: 'easeOutExpo',
+				targetWidth: 716, 
+				targetHeight: 330, 
+				targetPosX: 10, 
+				targetPosY: 10, 
+				containerParent: '#map-container', 
 				zoomboxAnimationSpeed: '750',
 				growFromTagAttr: true,
 				growTagAttr: 'rel',
-				openCallback: function(e){
+				onOpened: function(e){
 					var $wrap = $('<div id="zc-wrap" style="display:none;"/>');
-					$wrap.append('<div id="left"/>', '<div id="right"/>').appendTo('#zoombox-container');
-					$('#zoombox-container').append('<div id="zb-loader"/>');
+					$wrap.appendTo($(e.currentTarget).data('zbxTarget'));
 					
 					$.getJSON($(e.currentTarget).attr('href'), function(data){
-						var dImg = document.createElement('img');
-						dImg.src = data.img;
-						dImg.alt = data.heading;
-						$(dImg).appendTo('#left');
-						
-						$('#left img').load(function(){
-						    if(imgHasLoaded !== true){
-						        imgHasLoaded = true;
-						        $(this).addClass('shadow');
-						        $('#right').append('<h2>'+data.heading+'</h2>'+data.copy);
-						        $('#zb-loader').remove();
-  									$('#zc-wrap').fadeIn(function(){ imgHasLoaded = false; });
-						    }
-						}).each(function(index) { // check complete in case background images load from cache
-                                  if(this.complete) $(this).trigger('load');
-                              });
+						$('#zc-wrap', $(e.currentTarget).data('zbxTarget'))
+							.append('<h4>'+data.title+'</h4><p>'+data.copy+'</p>')
+							.fadeIn();
 					});
 				},
-				preClose: function(){ $('#zc-wrap').hide(); },
-				closeCallback: function(){
-				    $('#zc-wrap').remove();
-				    imgHasLoaded = false;
+				preClose: function(e){ $('#zc-wrap').hide(); },
+				onClosed: function(e){
+				    $('#zc-wrap', $(e.currentTarget).data('zbxTarget')).remove();
 				}
 			});
 			
@@ -200,10 +177,9 @@ var Zb = Zb || {};
 			    _label(ctx, o.labelX, o.labelY, o.width, 25, 3);
 			    _line(ctx, 'rgba(55,100,111,0.66)', o.lineConnectX, o.lineConnectY, o.targetX, o.targetY);
 				_target(ctx, o.targetX, o.targetY);
-				return '<a class="map-feature-link" style="top: '+o.labelY+'px; left: '+o.labelX+'px; width: '+o.width+'px; height: 25px;" href="'+o.target+'" rel="'+o.targetX+', '+o.targetY+'">'+o.copy+'</a>';
+				return '<a class="map-feature-link" style="top: '+o.labelY+'px; left: '+o.labelX+'px; width: '+o.width+'px; height: 25px;" href="js/'+o.target+'" rel="'+o.targetX+', '+o.targetY+'">'+o.copy+'</a>';
 			}
 		}
-		
 		
 		return pub;
 	})();
@@ -213,29 +189,3 @@ var Zb = Zb || {};
 	})();
 	
 }).call(Zb, jQuery);
-
-// $(document).ready(function(){
-// 	
-// 	$('#pony').zoombox({
-// 		targetWidth: 600,
-// 	    targetHeight: 540,
-// 	    targetPosX: 68,
-// 	    targetPosY: ($(window).height()-540)/2,
-// 		containerParent: '#jie-main',
-// 	    preOpen: function(e){
-// 			var frag = '<div style="display:none;" id="pony-wrapper">\
-// 							<h4>This here is a cool pony</h4>\
-// 							<img src="imgs/cool-pony.jpg" alt="cool pony" />\
-// 						</div>';
-// 			
-// 			$( $(e.currentTarget).data('zbxTarget') ).append(frag);
-// 	    },
-// 	    onOpened: function(e){
-// 	      $($(e.currentTarget).data('zbxTarget')).find('#pony-wrapper').fadeIn();
-// 	    },
-// 	    preClose: function(e){
-// 	      $($(e.currentTarget).data('zbxTarget')).find('#pony-wrapper').remove();
-// 	    }
-// 	});
-// 	
-// });

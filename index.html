@@ -64,49 +64,56 @@
 			<p>Translated, <code>$.zoombox</code> becomes yet another tool in the arsenal. See the <a href="#basic-usage">Usage</a> section below or the in-depth <a href="examples/index.html" rel="">examples</a> to see if it's useful to you.</p>
 			
 			
-			<h2 id="basic-usage">Usage</h2>
+			<h2 id="basic-usage">Usage JS</h2>
 			<p>Let us say we have an anchor that when clicked, should open a modal type container with a predefined location.</p>
 			
-			<div id="map-container"></div>
+			<p>Click the labels below to see <code>$.zoombox</code> in action.</p>
 			
-			<p><a href="javascript:void(0)" id="pony">Click me</a> to see <code>$.zoombox</code> in action.</p>
-	
-	
-	<p>We can do this easily with the following JS.</p>		
+			<div id="map-container"><h3>A Web Developer's day (possibly...)</h3></div>
+				
+			<p>Getting the modal-type containers to open FROM a particular point TO a particular point could be an arduous task. This is where <code>$.zoombox</code> really shines</p>
 			
-<pre class="codeblock"><span class="jQ">$</span>(<span class="sTr">'#pony'</span>).zoombox(<span>{</span>
-    targetWidth: <span class="sTr">600</span>,
-    targetHeight: <span class="sTr">540</span>,
-    targetPosX: <span class="sTr">68</span>,
-    targetPosY: <span class="sTr">0</span>,
-    containerParent: <span class="sTr">'#jie-main'</span>,
-    <span class="nUm">preOpen</span>: <span class="cS">function</span>(e){
-        var frag <span class="jQ">=</span> <span class="sTr">'&#60;div style="display:none;" id="pony-wrapper"&#62;\
-                      &#60;h4&#62;This here is a cool pony&#60;/h4&#62;\
-                      &#60;img src="imgs/cool-pony.jpg" alt="stuff" /&#62;\
-                   &#60;/div&#62;'</span>;
+			<p>We achieve our clickable links with the following code.</p>
 
-        <span class="jQ">$</span>( <span class="jQ">$</span>(<span>e.currentTarget</span>).data(<span class="sTr">'zbxTarget'</span>) ).append(<span>frag</span>);
-    },
+<pre class="codeblock"><span class="jQ">$</span>(<span class="sTr">'.map-feature-link'</span>).zoombox(<span>{</span>
+    targetWidth: <span class="sTr">716</span>, 
+    targetHeight: <span class="sTr">330</span>, 
+    targetPosX: <span class="sTr">10</span>, 
+    targetPosY: <span class="sTr">10</span>, 
+    containerParent: <span class="sTr">'#map-container'</span>, 
+    zoomboxAnimationSpeed: <span class="sTr">'750'</span>,
+    growFromTagAttr: <span class="sTr">true</span>,
+    growTagAttr: <span class="sTr">'rel'</span>,
     <span class="nUm">onOpened</span>: <span class="cS">function</span>(e){
-        <span class="jQ">$</span>( <span class="jQ">$</span>(<span>e.currentTarget</span>).data(<span class="sTr">'zbxTarget'</span>) )
-            .find(<span class="sTr">'#pony-wrapper'</span>)
-            .fadeIn();
+	var $wrap <span class="jQ">=</span> <span class="jQ">$</span>(<span class="sTr">'&#60;div id="zc-wrap" style="display:none;"/&#62;'</span>);
+	$wrap.appendTo(<span class="jQ">$</span>(<span>e.currentTarget</span>).data(<span class="sTr">'zbxTarget'</span>));
+	
+        <span class="jQ">$</span>.getJSON(<span class="jQ">$</span>(<span>e.currentTarget</span>).attr(<span class="sTr">'href'</span>), function(<span>data</span>){
+            <span class="jQ">$</span>('#zc-wrap')
+                .append(<span class="sTr">'&#60;h4&#62;'</span><span class="jQ">+</span><span>data.title</span><span class="jQ">+</span><span class="sTr">'&#60;/h4&#62;&#60;p&#62;'</span><span class="jQ">+</span><span>data.copy</span><span class="jQ">+</span><span class="sTr">'&#60;/p&#62;'</span>)
+                .fadeIn();
+        });
     },
-    <span class="nUm">preClose</span>: <span class="cS">function</span>(e){
-        $( <span class="jQ">$</span>(<span>e.currentTarget</span>).data(<span class="sTr">'zbxTarget'</span>) )
-            .find(<span class="sTr">'#pony-wrapper'</span>)
+    <span class="nUm">preClose</span>: <span class="cS">function</span>(e){ 
+	<span class="jQ">$</span>(<span class="sTr">'#zc-wrap'</span>, <span class="jQ">$</span>(<span>e.currentTarget</span>).data(<span class="sTr">'zbxTarget'</span>))
+            .hide(); 
+    },
+    <span class="nUm">onClosed</span>: <span class="cS">function</span>(e){
+        <span class="jQ">$</span>(<span class="sTr">'#zc-wrap'</span>, <span class="jQ">$</span>(<span>e.currentTarget</span>).data(<span class="sTr">'zbxTarget'</span>))
             .remove();
     }
 <span>}</span>);</pre>
+
 		<p><strong>Note:</strong> if you wondering what all this <code>$(e.currentTarget).data('zbxTarget')</code> business is all about. Underneath the hood, zoombox-container items get their own unique ID on <code>init</code>. This works well should we have multiple zoombox items. Because internally everything reacts to a 'click' event, we may pass our <code>event</code> object to our various available <code>$.zoombox</code> callback fns.</p>
-		<p>To retrieve the unique ID of the zoombox-container that is attached to an anchor (<code>$('#pony')</code> in the above example), use <code>$(e.currentTarget).data('zbxTarget')</code>.</p>
+		<p>To retrieve the unique ID of the zoombox-container that is attached to an anchor use <code>$(e.currentTarget).data('zbxTarget')</code>.</p>
 		
-		<p>And because <code>$.zoombox</code> only uses what CSS it needs to operate, you will also need to add some style. Consider the following.</p>
+		<h2 id="basic-usage-ii">Usage CSS</h2>
+		<p>Because <code>$.zoombox</code> only uses what CSS it needs to operate, you will also need to add some style. Consider the following.</p>
 			
 <pre class="codeblock">.zoombox-container {
-	<span class="cS">background-color</span><span class="nF">:</span> <span class="sTr">#E1E7E8</span><span class="nF">;</span>
+	<span class="cS">background-color</span><span class="nF">:</span> <span class="sTr">#1B2B32</span><span class="nF">;</span>
 	<span class="cS">border</span><span class="nF">:</span> <span class="sTr">1px solid #cad0d0</span><span class="nF">;</span>
+	<span class="cS">opacity</span><span class="nF">:</span> <span class="sTr">0.97 !important</span><span class="nF">;</span>
 }
 .zoombox-close{
 	<span class="cS">background</span><span class="nF">:</span> 
@@ -120,7 +127,7 @@
 .zoombox-close:hover{
 	<span class="cS">cursor</span><span class="nF">:</span> <span class="sTr">pointer</span><span class="nF">;</span>
 }</pre>
-			<p>This sets up <code>$.zoombox</code> to display as seen above. It's not flashy, but it does the trick.</p>
+			<p>This sets up <code>$.zoombox</code> to display similar to the above example. It's not flashy, but it does the trick.</p>
 			
             <h2 id="methods">Methods</h2>
 			<p><strong>Init:</strong></p>
