@@ -28,7 +28,7 @@ describe('Zoombox', function(){
 		
 		$(sel).zoombox({
 			onOpened: function(){
-				container = $(sel).data('zoomboxTarget');
+				container = $(sel).data('zbxTarget');
 				t = 1;
 			}
 		});
@@ -54,7 +54,7 @@ describe('Zoombox', function(){
 		
 		$(sel).zoombox({
 			onOpened: function(){
-				container = $(sel).data('zoomboxTarget');
+				container = $(sel).data('zbxTarget');
 				$(sel).click();
 			},
 			onClosed: function(){
@@ -78,7 +78,7 @@ describe('Zoombox', function(){
 		
 		$(sel).zoombox({
 			preOpen: function(){
-				container = $(sel).data('zoomboxTarget');
+				container = $(sel).data('zbxTarget');
 				$(container).append('<div id="test-div" />');
 			},
 			onOpened: function(){
@@ -103,7 +103,7 @@ describe('Zoombox', function(){
 		$(sel).zoombox({
 			onOpened: function(){
 				$(sel).click();
-				container = $(sel).data('zoomboxTarget');
+				container = $(sel).data('zbxTarget');
 				
 			},
 			preClose: function(){
