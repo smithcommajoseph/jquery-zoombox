@@ -4,7 +4,7 @@ $(document).ready(function(){
 		targetWidth: 600,
 	    targetHeight: 540,
 	    targetPosX: 68,
-	    targetPosY: 20,
+	    targetPosY: ($(window).height()-540)/2,
 		containerParent: '#jie-main',
 	    preOpen: function(e){
 			var frag = '<div style="display:none;" id="pony-wrapper">\
@@ -12,13 +12,13 @@ $(document).ready(function(){
 							<img src="imgs/cool-pony.jpg" alt="cool pony" />\
 						</div>';
 			
-			$( $(e.currentTarget).data('zoomboxTarget') ).append(frag);
+			$( $(e.currentTarget).data('zbxTarget') ).append(frag);
 	    },
-	    openCallback: function(e){
-	      $($(e.currentTarget).data('zoomboxTarget')).find('#pony-wrapper').fadeIn();
+	    onOpened: function(e){
+	      $($(e.currentTarget).data('zbxTarget')).find('#pony-wrapper').fadeIn();
 	    },
-	    preClose: function(){
-	      $('.zoombox-container').find('#pony-wrapper').remove();
+	    preClose: function(e){
+	      $($(e.currentTarget).data('zbxTarget')).find('#pony-wrapper').remove();
 	    }
 	});
 	

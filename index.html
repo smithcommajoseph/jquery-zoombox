@@ -43,26 +43,24 @@
 		<div id="jie-main">
 			<div id="downloads">
 				<a href="https://raw.github.com/technicolorenvy/jquery-zoombox/master/jquery.zoombox.min.js">
-					<span>Minified</span> <br/> (4.3K)
+					<span>Minified</span> <br/> (3.7K)
 				</a>
 				<span class="divider">|</span>
 				<a href="https://raw.github.com/technicolorenvy/jquery-zoombox/master/jquery.zoombox.js">
-					<span>Development</span> <br/> (7.0K)
+					<span>Development</span> <br/> (6.3K)
 				</a>
 				<span class="divider">|</span>
 				<a href="https://github.com/technicolorenvy/jquery-zoombox/zipball/master">
-					<span>Full .zip</span> <br/> (17.7MB)
+					<span>Full .zip</span> <br/> (17.5K)
 				</a>
 			</div>
 			<h2 id="mission">What is jQ Zoombox?</h2>
-			<p>Zoombox is a flexible, half-modal, half-tooltip plugin. It relies on the client-coder to do most of the heavy lifting.</p>
-			
-			<p>This ensures that you have the power to use <code>$.zoombox</code> as you like, not as you are forced.</p>
+			<p>Zoombox is a flexible, half-modal, half-tooltip plugin. It relies on the client-coder to do most of the heavy lifting. This ensures that you have the power to use <code>$.zoombox</code> as you like, not as you are forced.</p>
 			
 			<h2 id="overview">Overview</h2>
-			<p>The main feature of <code>$.zoombox</code> is that it does very little. Rather, the client coder is left to write all the CSS and JS to make a rad experience.</p>
+			<p>The strength in <code>$.zoombox</code> lies in that it does very, very little. Leaving / enabling you to write all the CSS and JS to make a rad experience.</p>
 			
-			<p>Translated, <code>$.zoombox</code> becomes simply another tool in the arsenal. See the <a href="#basic-usage">Basic Usage</a> section below or the in depth <a href="examples/index.html" rel="">examples</a> to see if it's useful to you.</p>
+			<p>Translated, <code>$.zoombox</code> becomes yet another tool in the arsenal. See the <a href="#basic-usage">Basic Usage</a> section below or the in-depth <a href="examples/index.html" rel="">examples</a> to see if it's useful to you.</p>
 			
 			
 			<h2 id="basic-usage">Basic Usage</h2>
@@ -85,22 +83,21 @@
                       &#60;img src="imgs/cool-pony.jpg" alt="stuff" /&#62;\
                    &#60;/div&#62;'</span>;
 
-        <span class="jQ">$</span>( <span class="jQ">$</span>(<span>e.currentTarget</span>).data(<span class="sTr">'zoomboxTarget'</span>) ).append(<span>frag</span>);
+        <span class="jQ">$</span>( <span class="jQ">$</span>(<span>e.currentTarget</span>).data(<span class="sTr">'zbxTarget'</span>) ).append(<span>frag</span>);
     },
-    <span class="nUm">openCallback</span>: <span class="cS">function</span>(e){
-        <span class="jQ">$</span>( <span class="jQ">$</span>(<span>e.currentTarget</span>).data(<span class="sTr">'zoomboxTarget'</span>))
+    <span class="nUm">onOpened</span>: <span class="cS">function</span>(e){
+        <span class="jQ">$</span>( <span class="jQ">$</span>(<span>e.currentTarget</span>).data(<span class="sTr">'zbxTarget'</span>) )
             .find(<span class="sTr">'#pony-wrapper'</span>)
             .fadeIn();
     },
-    <span class="nUm">preClose</span>: <span class="cS">function</span>(){
-        $(<span class="sTr">'.zoombox-container'</span>)
+    <span class="nUm">preClose</span>: <span class="cS">function</span>(e){
+        $( <span class="jQ">$</span>(<span>e.currentTarget</span>).data(<span class="sTr">'zbxTarget'</span>) )
             .find(<span class="sTr">'#pony-wrapper'</span>)
             .remove();
     }
 <span>}</span>);</pre>
-		<p><strong>Note:</strong> if you wondering what all this <code>$(e.currentTarget).data('zoomboxTarget')</code> business is all about (inside the <code>preOpen</code> and <code>openCallback</code> fns).</p>
-		<p>Underneath the hood, zoombox-container items get their own unique ID on init. This works well should we have multiple zoombox items. Because internally everything reacts to a 'click' event, we may pass our event to our various available <code>$.zoombox</code> fns.</p>
-		<p>To retrieve the unique ID of the zoombox-container that is attached to an anchor (<code>$('#pony')</code> in the above example), use <code>$(e.currentTarget).data('zoomboxTarget')</code>.</p>
+		<p><strong>Note:</strong> if you wondering what all this <code>$(e.currentTarget).data('zbxTarget')</code> business is all about. Underneath the hood, zoombox-container items get their own unique ID on <code>init</code>. This works well should we have multiple zoombox items. Because internally everything reacts to a 'click' event, we may pass our <code>event</code> object to our various available <code>$.zoombox</code> callback fns.</p>
+		<p>To retrieve the unique ID of the zoombox-container that is attached to an anchor (<code>$('#pony')</code> in the above example), use <code>$(e.currentTarget).data('zbxTarget')</code>.</p>
 		
 		<p>And because <code>$.zoombox</code> only uses what CSS it needs to operate, you will also need to add some style. Consider the following.</p>
 			
@@ -120,6 +117,7 @@
 .zoombox-close:hover{
 	<span class="cS">cursor</span><span class="nF">:</span> <span class="sTr">pointer</span><span class="nF">;</span>
 }</pre>
+			<p>This sets up <code>$.zoombox</code> to display as seen above. It's not flashy, but it does the trick.</p>
 			
             <h2 id="methods">Methods</h2>
 			<p><strong>Init:</strong></p>
@@ -127,8 +125,8 @@
 			<p>Initializes zoombox on the selected element(s) with the passed settings.</p>
 
 			<p><strong>Open:</strong></p>	
-			<pre class="codeblock"><span class="jQ">$</span>(<span class="sTr">'sel'</span>).zoombox(<span class="sTr">'open'</span>, <span class="sTr">'targetsel'</span>);</pre>
-			<p>Opens a zoombox that has been previously initialized with a simulated 'click' from 'targetsel'.</p>
+			<pre class="codeblock"><span class="jQ">$</span>(<span class="sTr">'sel'</span>).zoombox(<span class="sTr">'open'</span>);</pre>
+			<p>Opens a zoombox that has been previously initialized.</p>
 
 			<p><strong>Close:</strong></p>
 			<pre class="codeblock"><span class="jQ">$</span>(<span class="sTr">'sel'</span>).zoombox(<span class="sTr">'close'</span>);</pre>
@@ -140,40 +138,25 @@
 
 			<h2 id="props">Properties</h2>
 <pre class="codeblock"><span class="jQ">$</span>.fn.zoombox.defaults <span class="jQ">=</span> {
-  containerIdPre:            "<span class="sTr">#zoombox-container</span>",
-  containerClass:            "<span class="sTr">.zoombox-container</span>",
-  containerCloseClass:       "<span class="sTr">.zoombox-close</span>",
-  containerCSSMap:           <span>{ opacity: '0',  width: '1px', 
-                               height: '1px', position: 'absolute' }</span>,
-  containerParent:           '<span class="sTr">body</span>',
-  closeWhenEsc:              <span class="nUm">true</span>,
-  closeWhenSelfIsNotClicked: <span class="nUm">true</span>,
-  closeCallback:             <span class="nUm">null</span>,
-  growFromMouse:             <span class="nUm">false</span>,
-  growTagAttr:               <span class="nUm">undefined</span>,
-  openCallback:              <span class="nUm">null</span>,
-  preOpen:                   <span class="nUm">null</span>,
-  preClose:                  <span class="nUm">null</span>,
-  targetHeight:              <span class="sTr">200</span>,
-  targetWidth:               <span class="sTr">20</span>,
-  targetPosX:                <span class="nUm">undefined</span>,
-  targetPosY:                <span class="nUm">undefined</span>,
-  zoomboxEasing:             '<span class="sTr">swing</span>',
-  zoomboxAnimationSpeed:     '<span class="sTr">fast</span>'
+  containerCSSMap:  <span>{ opacity: '0',  width: '1px', 
+                      height: '1px', position: 'absolute' }</span>,
+  containerParent:  '<span class="sTr">body</span>',
+  closeBtn:         <span class="nUm">true</span>
+  closeWhenEsc:     <span class="nUm">true</span>,
+  closeIfNotSelf:   <span class="nUm">true</span>,
+  easing:           '<span class="sTr">swing</span>',
+  growFromMouse:    <span class="nUm">false</span>,
+  growTagAttr:      <span class="nUm">undefined</span>,
+  onClosed:         <span class="nUm">null</span>,
+  onOpened:         <span class="nUm">null</span>,
+  preOpen:          <span class="nUm">null</span>,
+  preClose:         <span class="nUm">null</span>,
+  speed:            '<span class="sTr">fast</span>',
+  targetHeight:     <span class="sTr">200</span>,
+  targetWidth:      <span class="sTr">200</span>,
+  targetPosX:       <span class="nUm">undefined</span>,
+  targetPosY:       <span class="nUm">undefined</span>
 };</pre>
-
-
-			<p><strong>containerIdPre:String = "id-prefix-of-zoombox"<br>
-			default = "#zoombox-container"</strong><br>
-			ID prefix to be used for Zoombox container.</p>
-
-			<p><strong>containerClass:String = "class-of-zoombox"<br>
-			default = ".zoombox-container"</strong><br>
-			Classname to be used for Zoombox container.</p>
-
-			<p><strong>containerCloseClass:String = "id-of-zoombox-close-anchor"<br>
-			default = ".zoombox-close"</strong><br>
-			Classname to be used for the Zoombox close anchor tag. Typically it makes for good UI to have one of these, but you may also set this to null if you do not want the default close anchor tag to be shown.</p>
 
 			<p><strong>containerCSSMap:Object = {any: 'CSS', that: 'you', want: 'applied' }<br>
 			default = {opacity: '0', width: '1px', height: '1px', position: 'absolute'}</strong><br>
@@ -183,18 +166,23 @@
 			default = "body"</strong><br>
 			With the Zoombox having absolute positioning to achieve it's 'zoom' effect, the parent item becomes an important var to be able to customize. If you would like the to place the zoombox-container div anywhere other than as an immediate child of the body tag, specify so here.</p>
 
+			<p><strong>closeBtn:Boolean<br>
+			default = true</strong><br>
+			Determines whether the Zoombox should append an anchor elem in each zoombox-container as a close button (unstyled).</p>
+			
 			<p><strong>closeWhenEsc:Boolean<br>
 			default = true</strong><br>
 			Determines whether the Zoombox should close when ESC is pressed.</p>
 
-			<p><strong>closeWhenSelfIsNotClicked:Boolean<br>
+			<p><strong>closeIfNotSelf:Boolean<br>
 			default = true</strong><br>
 			Determines whether the Zoombox should close when a DOM item that is not itself OR a child of itself is clicked.</p>
-
-			<p><strong>closeCallback:Function<br>
-			default = null</strong><br>
-			Optional callback fn that will be fired after zoombox-container div close animation.</p>
-
+			
+			
+			<p><strong>easing:String = 'Easing Function Name'<br>
+			default = 'swing'</strong><br>
+			Easing function to be applied to both zoomOpen and zoomClose animations</p>
+			
 			<p><strong>growFromMouse:Boolean<br>
 			default = false</strong><br>
 			If set to true, the zoombox-container div will have its initial (pre-zoomed) position set to mouse position at time of click.</p>
@@ -203,7 +191,11 @@
 			default = undefined</strong><br>
 			Optionally set growTagAttr to the attr which holds you x & y values.</p>
 
-			<p><strong>openCallback:Function<br>
+			<p><strong>onClosed:Function<br>
+			default = null</strong><br>
+			Optional callback fn that will be fired after zoombox-container div close animation.</p>
+			
+			<p><strong>onOpened:Function<br>
 			default = null</strong><br>
 			Optional callback fn that will be fired after zoombox-container div open animation. You may optionally pass the event to this function.</p>
 
@@ -214,7 +206,11 @@
 			<p><strong>preClose:Function<br>
 			default = null</strong><br>
 			Optional callback fn that will be fired Pre-zoombox Close animation. Note: Currently, this does not fire the zoombox-container animation as a callback.</p>
-
+			
+			<p><strong>speed:String or Number = 'num in milliseconds or jQuery shorthand'<br>
+			default = 'fast'</strong><br>
+			The duration to be applied to both zoomOpen and zoomClose animations</p>
+			
 			<p><strong>targetHeight:String = 'the target height zoombox-container div'<br>
 			default = '200'</strong><br>
 			This is the final height (currently in pixels) that the zoombox-container will animate to</p>
@@ -231,14 +227,6 @@
 			default = undefined</strong><br>
 			This is the target y coordinate (currently in pixels) that the zoombox-container will animate to relative to containerParent</p>
 
-			<p><strong>zoomboxEasing:String = 'Easing Function Name'<br>
-			default = 'swing'</strong><br>
-			Easing function to be applied to both zoomOpen and zoomClose animations</p>
-
-			<p><strong>zoomboxAnimationSpeed:String or Number = 'num in milliseconds or jQuery shorthand'<br>
-			default = 'fast'</strong><br>
-			The duration to be applied to both zoomOpen and zoomClose animations</p>
-						
 						
 			<h2 id="more">Want more?</h2>
 			<p>Check out the more in&ndash;depth examples <a href="examples/index.html">here</a>.</p>
