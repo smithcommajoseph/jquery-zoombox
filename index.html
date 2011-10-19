@@ -64,7 +64,7 @@
 			<p>Translated, <code>$.zoombox</code> becomes yet another tool in the arsenal. See the <a href="#basic-usage">Usage</a> section below or the in-depth <a href="examples/index.html" rel="">examples</a> to see if it's useful to you.</p>
 			
 			
-			<h2 id="basic-usage">Usage JS</h2>
+			<h2 id="basic-usage">Usage <span>|</span> JS</h2>
 			<p>Let us say we have an anchor that when clicked, should open a modal type container with a predefined location.</p>
 			
 			<p>Click the labels below to see <code>$.zoombox</code> in action.</p>
@@ -107,7 +107,14 @@
 		<p><strong>Note:</strong> if you wondering what all this <code>$(e.currentTarget).data('zbxTarget')</code> business is all about. Underneath the hood, zoombox-container items get their own unique ID on <code>init</code>. This works well should we have multiple zoombox items. Because internally everything reacts to a 'click' event, we may pass our <code>event</code> object to our various available <code>$.zoombox</code> callback fns.</p>
 		<p>To retrieve the unique ID of the zoombox-container that is attached to an anchor use <code>$(e.currentTarget).data('zbxTarget')</code>.</p>
 		
-		<h2 id="basic-usage-ii">Usage CSS</h2>
+		<h2 id="grow-props">Grow Properties?</h2>
+		
+		<p>Most of the properties passed to the above <code>$.zoombox</code> _should_ make sense. See the <a href="#props">Properties</a> section for full details. The only bit of _potential_ weirdness is the 'grow' properties. So let's look at those.</p>
+		
+		<p>When <code>'growFromTagAttr' === true</code>, we will look for a particular attribute to grow our .zoombox-container from.</p>
+		<p><code>'growTagAttr'</code> is the attribute containing the x,y values for us to use. So each anchor has a rel tag that looks something like <code>rel="0, 300"</code> or <code>rel="246, 300"</code>.</p>
+		
+		<h2 id="basic-usage-ii">Usage <span>|</span> CSS</h2>
 		<p>Because <code>$.zoombox</code> only uses what CSS it needs to operate, you will also need to add some style. Consider the following.</p>
 			
 <pre class="codeblock">.zoombox-container {
