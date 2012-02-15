@@ -18,7 +18,7 @@
 		OPTS = 'zbxOptions',
 		STATE = 'zbxState',
 		TARGET = 'zbxTarget',
-		CALCS = 'zoomboxCalcs';
+		CALCS = 'zoomboxCalcs',
 		
 	methods = {
 		init: function(options){
